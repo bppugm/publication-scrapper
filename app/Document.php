@@ -10,7 +10,7 @@ class Document extends Model
     protected $connection = 'mongodb';
     protected $guarded = ['id'];
     protected $casts = [
-    	'source-id' => 'integer',
+    	'source_id' => 'integer',
     	'prism:coverDate' => 'date',
     ];    
 }

@@ -5,7 +5,10 @@
         <document-list-item
         :title="item['title']"
         :coverDate="item['published_at']"
-        :HIndex="getHIndex(item)"
+        :hIndex="getHIndex(item)"
+        :subType="item.subtype_description"
+        :authors="item.authors"
+        :publicationName="item.publication_name"
         ></document-list-item>
         <hr v-if="index+1 != documents.length">
       </div>
@@ -33,7 +36,7 @@ export default {
       this.loading = false
   	},
     getHIndex(item) {
-      if (item.scimago) {
+      if (item.scimago && item.scimago.h_index != "-") {
         return item.scimago['h_index']
       } else {
         return "Not Available"

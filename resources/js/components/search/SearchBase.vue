@@ -2,7 +2,7 @@
 	<div class="container">
 	    <div class="row">
 	        <div class="col-md-8">
-	            <h1>Document Search</h1>
+	            <h1>Documents Search</h1>
 	        </div>
 	    </div>
 	    <div class="row py-4">

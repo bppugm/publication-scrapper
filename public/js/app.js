@@ -47966,7 +47966,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -47985,6 +47985,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+//
+//
+//
 //
 //
 //
@@ -48046,7 +48049,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       return fetchDocuments;
     }(),
     getHIndex: function getHIndex(item) {
-      if (item.scimago) {
+      if (item.scimago && item.scimago.h_index != "-") {
         return item.scimago['h_index'];
       } else {
         return "Not Available";
@@ -48929,7 +48932,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -48940,6 +48943,8 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DocumentListItemAuthors__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DocumentListItemAuthors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__DocumentListItemAuthors__);
 //
 //
 //
@@ -48956,6 +48961,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -48964,12 +48977,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     title: String,
     authors: Array,
     citedByCount: String,
-    PublicationName: String,
-    HIndex: String,
-    coverDate: String
+    publicationName: String,
+    hIndex: String,
+    coverDate: String,
+    subType: String
   },
   data: function data() {
     return {};
+  },
+
+  components: {
+    DocumentListItemAuthors: __WEBPACK_IMPORTED_MODULE_0__DocumentListItemAuthors___default.a
   }
 });
 
@@ -48982,21 +49000,32 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-md-10" }, [
-      _c("h5", { staticClass: "document-font" }, [
+    _c("div", { staticClass: "col-md-7" }, [
+      _c("span", { staticClass: "text-primary" }, [
+        _vm._v(_vm._s(_vm.subType))
+      ]),
+      _vm._v(" "),
+      _c("h6", { staticClass: "document-font" }, [
         _vm._v("\n\t\t\t" + _vm._s(_vm.title) + "\n\t\t")
       ])
     ]),
     _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "col-md-3" },
+      [_c("document-list-item-authors", { attrs: { authors: _vm.authors } })],
+      1
+    ),
+    _vm._v(" "),
     _c("div", { staticClass: "col-md-2" }, [
       _c("span", { staticClass: "badge badge-success" }, [
-        _vm._v(_vm._s(_vm.HIndex))
+        _vm._v(_vm._s(_vm.hIndex))
       ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-12" }, [
       _c("span", { staticClass: "text-muted" }, [
-        _vm._v("Published at: " + _vm._s(_vm.coverDate))
+        _vm._v("Source: " + _vm._s(_vm.publicationName))
       ])
     ])
   ])
@@ -49033,7 +49062,10 @@ var render = function() {
                   attrs: {
                     title: item["title"],
                     coverDate: item["published_at"],
-                    HIndex: _vm.getHIndex(item)
+                    hIndex: _vm.getHIndex(item),
+                    subType: item.subtype_description,
+                    authors: item.authors,
+                    publicationName: item.publication_name
                   }
                 }),
                 _vm._v(" "),
@@ -49079,7 +49111,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-md-8" }, [
-        _c("h1", [_vm._v("Document Search")])
+        _c("h1", [_vm._v("Documents Search")])
       ])
     ])
   }
@@ -49098,6 +49130,220 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(80)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(82)
+/* template */
+var __vue_template__ = __webpack_require__(83)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-535c6ed3"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/document/DocumentListItemAuthors.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-535c6ed3", Component.options)
+  } else {
+    hotAPI.reload("data-v-535c6ed3", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(81);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(5)("1819206c", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-535c6ed3\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DocumentListItemAuthors.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-535c6ed3\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DocumentListItemAuthors.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+
+  name: 'DocumentListItemAuthors',
+  props: {
+    authors: Array
+  },
+  data: function data() {
+    return {};
+  },
+
+  computed: {
+    authorNames: function authorNames() {
+      return this.authors.map(function (item) {
+        return item.authname;
+      });
+    },
+    uniqueNames: function uniqueNames() {
+      return [].concat(_toConsumableArray(new Set(this.authorNames)));
+    },
+    firstBatch: function firstBatch() {
+      var authors = [];
+      for (var i = 0; i <= this.iterationNumber; i++) {
+        authors[i] = this.uniqueNames[i];
+      }
+      return authors;
+    },
+    iterationNumber: function iterationNumber() {
+      if (this.tooManyAuthors) {
+        return 1;
+      } else {
+        return this.uniqueNames.length - 1;
+      }
+    },
+    tooManyAuthors: function tooManyAuthors() {
+      if (this.uniqueNames.length > 3) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    lastAuthor: function lastAuthor() {
+      return this.uniqueNames[this.uniqueNames.length - 1];
+    }
+  }
+});
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _vm._l(_vm.firstBatch, function(author, index) {
+        return _c("span", [
+          _c("a", { attrs: { href: "#" } }, [_vm._v(_vm._s(author))]),
+          _vm._v(" "),
+          index + 1 != _vm.firstBatch.length
+            ? _c("span", [_vm._v(",  ")])
+            : _vm._e()
+        ])
+      }),
+      _vm._v(" "),
+      _vm.tooManyAuthors
+        ? _c("span", [
+            _vm._v("\n\t\t(...)\n\t\t"),
+            _c("a", { attrs: { href: "#" } }, [_vm._v(_vm._s(_vm.lastAuthor))])
+          ])
+        : _vm._e()
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-535c6ed3", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
