@@ -24,16 +24,17 @@ class DocumentController extends Controller
 		$this->client = new Client;
 	}
 
-    public function test()
-    {
-        return Document::pluck('authors')->flatten(1)->first();
-    }
-
     public function index(Request $request)
     {
-        $documents = Document::paginate(25);
-        return $documents;
-    	// return DocumentsResource::collection($documents);
+        $document = new Document;
+
+        if ($request->filled('h_index')) {
+            $document = $document->where('scimago.h_index', $request->h_index);
+        }
+
+        $documents = $document->paginate(20);
+        
+    	return DocumentsResource::collection($documents);
     }
 
     public function show()

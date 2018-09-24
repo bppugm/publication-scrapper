@@ -19,6 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/documents', 'DocumentController@index');
 Route::get('/documents/show', 'DocumentController@show');
-Route::get('/documents/test', 'DocumentController@test');
 Route::get('/scimago', 'ScimagoController@index');
 Route::get('/scimago/{id}', 'ScimagoController@show');

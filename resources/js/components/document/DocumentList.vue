@@ -1,6 +1,9 @@
 <template>
 	<div class="card">
-		<div class="card-body" v-if="!loading">
+    <div class="card-body" v-if="loading">
+      <spinner></spinner>
+    </div>
+		<div class="card-body" v-else>
       <div v-for="(item, index) in documents" :key="index">
         <document-list-item
         :title="item['title']"
@@ -13,6 +16,12 @@
         <hr v-if="index+1 != documents.length">
       </div>
 		</div>
+    <div class="card-footer">
+      <paginator v-if="!loading"
+      :meta="meta"
+      :links="links"
+      :page.sync="page"></paginator>
+    </div>
 	</div>
 </template>
 
@@ -26,14 +35,19 @@ export default {
   data () {
     return {
     	documents: [],
+      links: {},
+      meta: {},
     	loading: true,
     }
   },
   methods: {
   	async fetchDocuments() {
-  		let response = await axios.get('/api/documents')
+  		let response = await axios.get('/api/documents', {
+        params: this.query,
+      })
   		this.documents = response.data.data
-      this.loading = false
+      this.links = response.data.links
+      this.meta = response.data.meta
   	},
     getHIndex(item) {
       if (item.scimago && item.scimago.h_index != "-") {
@@ -43,8 +57,32 @@ export default {
       }
     }
   },
-  mounted() {
-  	this.fetchDocuments();
+  computed: {
+    query: function () {
+      return this.$store.getters['query/getQuery']
+    },
+    page: {
+      get: function () {
+        return this.query.page
+      },
+      set: function (value) {
+        this.query.page = value
+      }
+    },
+  },
+  watch: {
+    query: {
+      async handler(newVal) {
+          this.loading = true
+          await this.fetchDocuments()
+          this.loading = false
+      },
+      deep: true,
+    }
+  },
+  async mounted() {
+  	await this.fetchDocuments();
+    this.loading = false
   },
   components: {
     DocumentListItem,

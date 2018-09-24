@@ -2,8 +2,7 @@
 	<div class="row">
 		<div class="col-md-7">
 			<span class="text-primary">{{ subType }}</span>
-			<h6 class="document-font">
-				{{ title }}
+			<h6 class="document-font" v-html="title">
 			</h6>
 		</div>
 		<div class="col-md-3">
