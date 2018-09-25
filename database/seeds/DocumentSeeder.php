@@ -87,7 +87,7 @@ class DocumentSeeder extends Seeder
 
     public function getResponseData($responseArray)
     {
-        return DocumentsTransformer::collection(collect($responseArray['search-results']['entry']))-> jsonSerialize();
+        return DocumentsTransformer::collection(collect($responseArray['search-results']['entry']))->jsonSerialize();
     }
 
     public function getTotalRecord($responseArray)

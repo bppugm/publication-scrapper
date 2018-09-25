@@ -20,7 +20,10 @@
                 </li>
             @else
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('search.index') }}">Search</a>
+                    <a class="nav-link" href="{{ route('document.index') }}">Documents</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('author.index') }}">Authors</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

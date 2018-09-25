@@ -2,6 +2,8 @@ const state = {
     query: {
         page: 1,
         h_index: null,
+        author_id: null,
+        year: null,
     },
     filters: {
         h_index: [

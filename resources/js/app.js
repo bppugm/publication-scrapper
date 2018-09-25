@@ -19,6 +19,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('Paginator', require('./components/Paginator'));
 Vue.component('Spinner', require('./components/Spinner'));
 Vue.component('SearchBase', require('./components/search/SearchBase'));
+Vue.component('AuthorSearchBase', require('./components/author/AuthorSearchBase'));
+Vue.component('AuthorDetailsBase', require('./components/author/AuthorDetailsBase'));
 
 import store from './store/index';
 

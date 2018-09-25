@@ -26,11 +26,7 @@ class DocumentController extends Controller
 
     public function index(Request $request)
     {
-        $document = new Document;
-
-        if ($request->filled('h_index')) {
-            $document = $document->where('scimago.h_index', $request->h_index);
-        }
+        $document = (new Document)->filter($request);
 
         $documents = $document->paginate(20);
         

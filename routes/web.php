@@ -18,4 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/search', 'SearchController@index')->name('search.index');
+Route::get('/document', 'DocumentController@index')->name('document.index');
+Route::get('/author', 'AuthorController@index')->name('author.index');
+Route::get('/author/search', 'AuthorController@search')->name('author.search');
+Route::get('/author/{author}', 'AuthorController@show')->name('author.show');

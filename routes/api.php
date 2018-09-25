@@ -17,7 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/authors', 'AuthorController@index');
+Route::get('/authors/{author}', 'AuthorController@show');
+
 Route::get('/documents', 'DocumentController@index');
 Route::get('/documents/show', 'DocumentController@show');
+Route::get('/documents/metrics', 'DocumentMetricController@index');
+
 Route::get('/scimago', 'ScimagoController@index');
 Route::get('/scimago/{id}', 'ScimagoController@show');
