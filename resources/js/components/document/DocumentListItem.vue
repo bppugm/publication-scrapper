@@ -6,15 +6,17 @@
 			</h6>
 		</div>
 		<div class="col-md-3">
+			<br>
 			<document-list-item-authors
 			:authors="authors"
 			></document-list-item-authors>
 		</div>
 		<div class="col-md-2">
-			<span class="badge badge-success">{{ hIndex }}</span>
+			<span v-if="hasQuartile" class="badge badge-success">{{ hIndex }}</span>
+			<span v-else class="badge badge-secondary">Quartile N/A</span>
 		</div>
-		<div class="col-md-12">
-			<span class="text-muted">Source: {{ publicationName }}</span>
+		<div class="col-md-7 small-spacing">
+			<small class="text-muted">Source: {{ publicationName }}</small>
 		</div>
 	</div>
 </template>
@@ -39,6 +41,15 @@ export default {
 
     }
   },
+  computed: {
+  	hasQuartile: function () {
+  		if (this.subType == 'Article') {
+  			return true
+  		} else {
+  			return false
+  		}
+  	}
+  },
   components: {
   	DocumentListItemAuthors,
   }
@@ -46,4 +57,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
+	.small-spacing {
+		line-height: 1;
+	}
 </style>

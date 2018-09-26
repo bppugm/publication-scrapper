@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Document;
+use App\Traits\DocumentTrait;
 use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
+    use DocumentTrait;
+
     public function index()
     {
     	return view('author.index');
@@ -21,8 +25,12 @@ class AuthorController extends Controller
     	return view('author.search', compact('request'));
     }
 
-    public function show($author)
+    public function show(Request $request, $author)
     {
-        return view('author.show', compact('author'));
+        $documents = (new Document)->filter($request)->where('authors.auth_id', $author)->get();
+        
+        $metric = $this->documentMetrics($documents);
+        
+        return view('author.show', compact('author', 'documents', 'metric'));
     }
 }
