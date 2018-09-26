@@ -21,13 +21,13 @@
 	    			:request="{{ json_encode(request()->all()) }}"
 	    			:metric="{{ json_encode($metric) }}"
 	    			></author-filter-base>
+		    		<a href="{{ route('author.show', $author) }}" class="btn btn-warning mt-3"><i class="fa fa-redo"></i> Reset</a>
 	    		</div>
 	    	</div>
 	    	<div class="col-md-9">
 	    		<div class="card">
 	    			<div class="card-header d-flex justify-content-between">
 	    				<span>{{ $documents->count() }} Documents</span>
-	    				<a href="#">Filter documents <i class="fa fa-arrow-right"></i></a>
 	    			</div>
 	    			<div class="card-body">
 	    				@foreach ($documents as $document)
