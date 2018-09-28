@@ -8,11 +8,9 @@
 	        </div>
 	    </div>
 	    <div class="row">
-	    	<div class="col-md-8">
-	    		<div class="card card-body">
-	    			<h3>I. W. Mustika</h3>
-	    		</div>
-	    	</div>
+	    	<author-details-profile
+	    	author-id="{{ $author }}"
+	    	></author-details-profile>
 	    </div>
 	    <div class="row py-4">
 	    	<div class="col-md-3">
@@ -27,7 +25,11 @@
 	    	<div class="col-md-9">
 	    		<div class="card">
 	    			<div class="card-header d-flex justify-content-between">
-	    				<span>{{ $documents->count() }} Documents</span>
+	    				<span>{{ $documents->count() }} Documents
+	    					@empty (request('year'))
+	    					    From 2013&ndash;2017
+	    					@endempty
+	    				</span>
 	    			</div>
 	    			<div class="card-body">
 	    				@foreach ($documents as $document)

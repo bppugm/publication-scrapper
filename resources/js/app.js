@@ -22,6 +22,7 @@ Vue.component('SearchBase', require('./components/search/SearchBase'));
 Vue.component('AuthorFilterBase', require('./components/author/AuthorFilterBase'));
 Vue.component('AuthorSearchBase', require('./components/author/AuthorSearchBase'));
 Vue.component('AuthorDetailsBase', require('./components/author/AuthorDetailsBase'));
+Vue.component('AuthorDetailsProfile', require('./components/author/AuthorDetailsProfile'));
 Vue.component('DocumentListItem', require('./components/document/DocumentListItem'));
 
 import store from './store/index';

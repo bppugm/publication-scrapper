@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<span v-for="(author, index) in firstBatch">
-			<a href="#">{{ author }}</a>
+			<a :href="authorDetailsUrl(author)">{{ author }}</a>
 			<span v-if="index + 1 != firstBatch.length">, &nbsp;</span>
 		</span>
 		<span v-if="tooManyAuthors">
@@ -21,6 +21,20 @@ export default {
   data () {
     return {
 
+    }
+  },
+  methods: {
+    getAuthorIndex(authname){
+      return this.authors.findIndex(item => {
+        return item.authname == authname
+      })
+    },
+    getAuthorId(authname){
+      let index = this.getAuthorIndex(authname)
+      return this.authors[index]['auth_id']
+    },
+    authorDetailsUrl(authname) {
+      return process.env.MIX_APP_URL+`/author/${this.getAuthorId(authname)}`
     }
   },
   computed: {
