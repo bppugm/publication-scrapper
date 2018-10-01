@@ -3,7 +3,10 @@
 		<div v-if="loading" class="text-center">
 			<h3 class="text-muted mt-0">Loading...</h3>
 		</div>
-		<div class="card card-body" v-else>
+		<div v-if="emptyResults">
+			<h4 class="text-muted">Sorry, we can't find authors you are looking for. Please try with different keywords.</h4>
+		</div>
+		<div class="card card-body" v-if="!loading && !emptyResults">
 			<table class="table">
 				<thead>
 					<tr>
@@ -56,6 +59,15 @@ export default {
 
   		this.authors = response.data.data
   		this.loading = false
+  	}
+  },
+  computed: {
+  	emptyResults: function () {
+  		if (this.loading == false && this.authors.length == 0) {
+  			return true	
+  		} else {
+  			return false
+  		}
   	}
   },
   components: {

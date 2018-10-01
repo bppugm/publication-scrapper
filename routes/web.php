@@ -12,13 +12,19 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('document.index');
 });
 
 Auth::routes();
 
+Route::middleware('auth')->prefix('document')->group(function(){
+	Route::get('/', 'DocumentController@index')->name('document.index');
+});
+
+Route::middleware(['auth'])->prefix('author')->group(function(){
+	Route::get('/', 'AuthorController@index')->name('author.index');
+	Route::get('/search', 'AuthorController@search')->name('author.search');
+	Route::get('/{author}', 'AuthorController@show')->name('author.show');
+});
+
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/document', 'DocumentController@index')->name('document.index');
-Route::get('/author', 'AuthorController@index')->name('author.index');
-Route::get('/author/search', 'AuthorController@search')->name('author.search');
-Route::get('/author/{author}', 'AuthorController@show')->name('author.show');

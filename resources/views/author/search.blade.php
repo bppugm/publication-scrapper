@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Author search results')
+
 @section('content')
 	<author-search-base
 	last_name="{{ $request->last_name }}"
