@@ -61,7 +61,7 @@ export default {
   },
   methods: {
   	async fetchAuthor() {
-  		let response = await axios.get(`/api/authors/${this.authorId}`)
+  		let response = await axios.get(this.url(`/api/authors/${this.authorId}`))
   		this.author = response.data.data[0]
   	},
   },
