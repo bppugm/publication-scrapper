@@ -51137,7 +51137,7 @@ var render = function() {
                       _c(
                         "a",
                         {
-                          attrs: { href: this.url("/author/" + author.auth_id) }
+                          attrs: { href: _vm.url("/author/" + author.auth_id) }
                         },
                         [
                           _vm._v(

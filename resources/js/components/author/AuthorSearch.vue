@@ -17,7 +17,7 @@
 				<tbody>
 					<tr v-for="author in authors" :key="author.auth_id">
 						<td>
-							<h5><a :href="this.url('/author/'+author.auth_id)">{{ author['given-name']+' '+author['surname'] }}</a></h5>
+							<h5><a :href="url('/author/'+author.auth_id)">{{ author['given-name']+' '+author['surname'] }}</a></h5>
 						</td>
 						<td>
 							{{ author.auth_id }}
