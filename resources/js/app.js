@@ -17,6 +17,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('Paginator', require('./components/Paginator'));
+Vue.component('Skeleton', require('./components/Skeleton'));
 Vue.component('Spinner', require('./components/Spinner'));
 Vue.component('SearchBase', require('./components/search/SearchBase'));
 Vue.component('AuthorFilterBase', require('./components/author/AuthorFilterBase'));

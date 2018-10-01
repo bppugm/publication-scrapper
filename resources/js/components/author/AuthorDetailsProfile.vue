@@ -1,6 +1,15 @@
 <template>
-	<div class="col-md-12">
-		<div class="row" v-if="!loading">
+	<div class="">
+    <skeleton v-if="loading">
+      <div class="card card-body my-2">
+        <div class="post">
+          <div class="avatar"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+    </skeleton>
+		<div class="row" v-else>
 			<div class="col-md-12">
 				<div class="card card-body">
 					<h3 class="m-0">
@@ -36,6 +45,8 @@
 </template>
 
 <script>
+import Skeleton from '../Skeleton';
+
 export default {
 
   name: 'AuthorDetailsProfile',
@@ -77,6 +88,9 @@ export default {
   async mounted() {
   	await this.fetchAuthor()
   	this.loading = false
+  },
+  components: {
+    Skeleton,
   }
 }
 </script>

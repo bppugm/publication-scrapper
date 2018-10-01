@@ -8,9 +8,11 @@
 	        </div>
 	    </div>
 	    <div class="row">
-	    	<author-details-profile
-	    	author-id="{{ $author }}"
-	    	></author-details-profile>
+	    	<div class="col-md-12">
+		    	<author-details-profile
+		    	author-id="{{ $author }}"
+		    	></author-details-profile>
+	    	</div>
 	    </div>
 	    <div class="row py-4">
 	    	<div class="col-md-3">
