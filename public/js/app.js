@@ -51136,7 +51136,9 @@ var render = function() {
                     _c("h5", [
                       _c(
                         "a",
-                        { attrs: { href: "/author/" + author.auth_id } },
+                        {
+                          attrs: { href: this.url("/author/" + author.auth_id) }
+                        },
                         [
                           _vm._v(
                             _vm._s(
