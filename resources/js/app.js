@@ -28,6 +28,14 @@ Vue.component('DocumentListItem', require('./components/document/DocumentListIte
 
 import store from './store/index';
 
+Vue.mixin({
+    methods: {
+        url(string) {
+            return process.env.MIX_APP_URL + string
+        }
+    }
+});
+
 const app = new Vue({
     el: '#app',
     store,

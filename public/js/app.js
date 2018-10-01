@@ -25362,9 +25362,17 @@ Vue.component('DocumentListItem', __webpack_require__(16));
 
 
 
+Vue.mixin({
+    methods: {
+        url: function url(string) {
+            return "http://localhost:8000" + string;
+        }
+    }
+});
+
 var app = new Vue({
-  el: '#app',
-  store: __WEBPACK_IMPORTED_MODULE_0__store_index__["a" /* default */]
+    el: '#app',
+    store: __WEBPACK_IMPORTED_MODULE_0__store_index__["a" /* default */]
 });
 
 /***/ }),
@@ -48705,7 +48713,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/api/documents', {
+                return axios.get(this.url('/api/documents'), {
                   params: this.query
                 });
 
@@ -50898,7 +50906,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/api/authors', {
+                return axios.get(this.url('/api/authors'), {
                   params: this.query
                 });
 
