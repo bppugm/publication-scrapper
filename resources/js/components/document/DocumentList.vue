@@ -42,7 +42,7 @@ export default {
   },
   methods: {
   	async fetchDocuments() {
-  		let response = await axios.get(this.url('/api/documents'), {
+  		let response = await axios.get('/api/documents', {
         params: this.query,
       })
   		this.documents = response.data.data

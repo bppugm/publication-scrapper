@@ -26,5 +26,10 @@
             @yield('content')
         </main>
     </div>
+    <script type="text/javascript">
+        window.env = {
+            baseUrl: '{{ env('APP_URL') }}',
+        }
+    </script>
 </body>
 </html>

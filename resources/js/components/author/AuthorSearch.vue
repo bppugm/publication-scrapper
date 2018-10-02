@@ -53,7 +53,7 @@ export default {
   },
   methods: {
   	async fetchAuthors() {
-  		let response = await axios.get(this.url('/api/authors'), {
+  		let response = await axios.get('/api/authors', {
   			params: this.query
   		})
 
