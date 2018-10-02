@@ -31,7 +31,7 @@ import store from './store/index';
 Vue.mixin({
     methods: {
         url(string) {
-            return process.env.MIX_APP_URL + string
+            return env.baseUrl + string
         }
     }
 });
