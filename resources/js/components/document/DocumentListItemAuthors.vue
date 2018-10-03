@@ -34,7 +34,7 @@ export default {
       return this.authors[index]['auth_id']
     },
     authorDetailsUrl(authname) {
-      return process.env.MIX_APP_URL+`/author/${this.getAuthorId(authname)}`
+      return this.url(`/author/${this.getAuthorId(authname)}`)
     }
   },
   computed: {
