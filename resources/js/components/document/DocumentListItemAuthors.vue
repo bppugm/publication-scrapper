@@ -6,7 +6,7 @@
 		</span>
 		<span v-if="tooManyAuthors">
 			(...)
-			<a href="#">{{ lastAuthor }}</a>
+			<a :href="authorDetailsUrl(lastAuthor)">{{ lastAuthor }}</a>
 		</span>
 	</div>
 </template>
