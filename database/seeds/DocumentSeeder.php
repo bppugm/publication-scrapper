@@ -27,7 +27,7 @@ class DocumentSeeder extends Seeder
     public function run()
     {
     	Document::truncate();
-    	$years = [2013, 2014, 2015, 2016, 2017];
+    	$years = [2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
 
         foreach ($years as $year) {
             $documents = $this->getDocuments($year);
@@ -75,7 +75,7 @@ class DocumentSeeder extends Seeder
     	$query = [
 			'query' => "PUBYEAR = $year AND AF-ID(60069380)",
 			'apiKey' => 'ee76c131d9bf443e5afffa9be30dd723',
-			'field' => 'citedby-count,author,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,prism:doi,source-id,afid',
+			'field' => 'citedby-count,author,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,prism:doi,source-id,afid,authkeywords',
 			'view' => 'complete',
 			'start' => 0,
 		];
