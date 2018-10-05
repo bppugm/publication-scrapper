@@ -26,6 +26,7 @@ class DocumentsTransformer extends JsonResource
             'subtype_description' => $this['subtypeDescription'],
             'source_id' => optional($this)['source-id'],
             'authors' => AuthorsTransformer::collection(collect($this['author']))->jsonSerialize(),
+            'keywords' => optional($this)['authkeywords'],
         ];
     }
 }

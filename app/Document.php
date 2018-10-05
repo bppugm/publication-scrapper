@@ -17,6 +17,10 @@ class Document extends Model
     public function filter($request)
     {
     	$model = $this;
+
+        if ($request->filled('keyword')) {
+            $model = $model->where('title', 'like', "%$request->keyword%")->orWhere('keywords', 'like', "%$request->keyword%");
+        }
     	
         if ($request->filled('h_index')) {
             $model = $model->where('scimago.h_index', $request->h_index);

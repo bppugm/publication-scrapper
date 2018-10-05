@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Apis\ScopusAuthorRetrieval;
+use App\Author;
 use App\Document;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthorsResource;
@@ -25,21 +26,15 @@ class AuthorController extends Controller
             'first_name' => 'string|nullable',
     	]);
 
-    	$authors = Cache::rememberForever('authors.all', function ()
-    	{
-    		return Document::get()->pluck('authors')->flatten(1)->unique('auth_id');
-    	});
+    	$author = new Author();
 
-    	$authors = $authors->filter(function ($item) use ($request)
-    	{
-    		$val[0] = strtolower($item['surname']) == strtolower($request->last_name);
+        $author = $author->where('surname', 'like', $request->last_name);
 
-            if ($request->filled('first_name')) {
-                $val[1] = strtolower($item['given-name']) == strtolower($request->first_name);
-            }
-            
-            return !collect($val)->contains(false); 
-    	});
+        if ($request->filled('first_name')) {
+            $author = $author->where('given-name', 'like', $request->first_name);
+        }
+
+        $authors = $author->get();
 
     	return AuthorsResource::collection($authors);
     }
