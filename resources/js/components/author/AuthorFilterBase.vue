@@ -24,6 +24,9 @@
 					</div>
 				</div>
 			</div>
+			<div v-for="(item, key) in query">
+				<input type="hidden" :name="key" :value="item">
+			</div>
 		</div>
 	</form>
 </template>
@@ -35,6 +38,7 @@ export default {
   props: {
   	request: Object,
   	metric: Object,
+  	query: Object,
   },
   data () {
     return {

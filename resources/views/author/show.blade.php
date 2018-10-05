@@ -31,7 +31,7 @@
 	    			<div class="card-header d-flex justify-content-between">
 	    				<span>{{ $documents->count() }} Documents
 	    					@empty (request('year'))
-	    					    From 2013&ndash;2017
+	    					    From 2008&ndash;2018
 	    					@endempty
 	    				</span>
 	    			</div>

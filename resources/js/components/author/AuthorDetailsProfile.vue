@@ -73,7 +73,7 @@ export default {
   		return this.author['preferred-name']['given-name']
   	},
   	affiliation: function () {
-  		return this.author['affiliation-current']['affiliation-name']+', Universitas Gadjah Mada'
+  		return this.author['affiliation-current']['affiliation-name']
   	},
   	totalDocuments: function () {
   		return this.author['coredata']['document-count']

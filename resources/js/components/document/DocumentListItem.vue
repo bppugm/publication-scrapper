@@ -28,6 +28,8 @@ export default {
 
   name: 'DocumentListItem',
   props: {
+    scopusId: String,
+    doi: String,
   	title: String,
   	authors: Array,
   	citedByCount: String,
@@ -43,11 +45,18 @@ export default {
   },
   computed: {
   	hasQuartile: function () {
-  		if (this.subType == 'Article') {
-  			return true
-  		} else {
-  			return false
-  		}
+      if (this.hIndex) {
+        let quartile = ['Q1', 'Q2', 'Q3', 'Q4']
+        let hasIndex = quartile.find(element => {
+          return element === this.hIndex
+        });
+
+        if (hasIndex) {
+          return true
+        }
+      }
+      
+  		return false
   	}
   },
   components: {
