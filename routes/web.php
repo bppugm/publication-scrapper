@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware('auth')->prefix('document')->group(function(){
+	Route::get('/search', 'DocumentController@search')->name('document.search');
 	Route::get('/', 'DocumentController@index')->name('document.index');
 });
 
@@ -28,3 +29,9 @@ Route::middleware(['auth'])->prefix('author')->group(function(){
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/crossref', function ()
+{
+	$view = view('xml-template.crossref')->render();
+	return $view;
+})->name('crossref.index');
