@@ -25,6 +25,7 @@ Vue.component('AuthorSearchBase', require('./components/author/AuthorSearchBase'
 Vue.component('AuthorDetailsBase', require('./components/author/AuthorDetailsBase'));
 Vue.component('AuthorDetailsProfile', require('./components/author/AuthorDetailsProfile'));
 Vue.component('DocumentListItem', require('./components/document/DocumentListItem'));
+Vue.component('DocumentSearchForm', require('./components/document/DocumentSearchForm'));
 
 import store from './store/index';
 

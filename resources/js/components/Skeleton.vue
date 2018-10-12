@@ -51,6 +51,10 @@ export default {
 	  background-color: #ddd;
 	}
 
+	.full {
+		width: 100% !important;
+	}
+
 	@keyframes shine-lines {
 	  0% {
 	    background-position: -100px;

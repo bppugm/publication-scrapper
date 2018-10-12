@@ -1,7 +1,11 @@
 <template>
 	<div>
-		<div v-if="loading" class="text-center">
-			<h3 class="text-muted mt-0">Loading...</h3>
+		<div v-if="loading" class="card card-body">
+			<skeleton>
+				<div v-for="item in [0, 1, 2]" class="post">
+					<div class="line full"></div>
+				</div>
+			</skeleton>
 		</div>
 		<div v-if="emptyResults">
 			<h4 class="text-muted">Sorry, we can't find authors you are looking for. Please try with different keywords.</h4>
@@ -17,10 +21,10 @@
 				<tbody>
 					<tr v-for="author in authors" :key="author.auth_id">
 						<td>
-							<h5><a :href="url('/author/'+author.auth_id)">{{ author['given-name']+' '+author['surname'] }}</a></h5>
+							<h5><a :href="url('/author/'+getAuthorId(author))">{{ getAuthorName(author) }}</a></h5>
 						</td>
 						<td>
-							{{ author.auth_id }}
+							{{ getAuthorId(author) }}
 						</td>
 					</tr>
 				</tbody>
@@ -57,8 +61,17 @@ export default {
   			params: this.query
   		})
 
-  		this.authors = response.data.data
+  		this.authors = response.data.data.entry
   		this.loading = false
+  	},
+  	getAuthorId(author) {
+  		let authorId = author['dc:identifier'].replace('AUTHOR_ID:', '')
+  		return authorId
+  	},
+  	getAuthorName(author) {
+  		let authorName = author['preferred-name']
+
+  		return authorName['given-name']+' '+authorName['surname']
   	}
   },
   computed: {
