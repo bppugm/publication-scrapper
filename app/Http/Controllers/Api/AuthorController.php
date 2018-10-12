@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Apis\ScopusAuthorRetrieval;
+use App\Apis\ScopusAuthorSearch;
 use App\Author;
 use App\Document;
 use App\Http\Controllers\Controller;
@@ -21,22 +22,14 @@ class AuthorController extends Controller
 
     public function index(Request $request)
     {
-    	$request->validate([
+    	$query = $request->validate([
     		'last_name' => 'required|string',
             'first_name' => 'string|nullable',
     	]);
+        $author = new ScopusAuthorSearch;
+    	$author = $author->findAuthors($query);
 
-    	$author = new Author();
-
-        $author = $author->where('surname', 'like', $request->last_name);
-
-        if ($request->filled('first_name')) {
-            $author = $author->where('given-name', 'like', $request->first_name);
-        }
-
-        $authors = $author->get();
-
-    	return AuthorsResource::collection($authors);
+    	return $author;
     }
 
     public function show($author)
