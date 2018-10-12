@@ -10,14 +10,14 @@
     <title>{{ config('app.name', 'Laravel') }} - @yield('title', 'Latest data From Socpus')</title>
 
     <!-- Scripts -->
-    <script src="{{ mix('/js/app.js') }}" defer></script>
+    <script src="{{ asset(mix('/js/app.js')) }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset(mix('/css/app.css')) }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
