@@ -14,7 +14,7 @@ class ScopusAuthorRetrieval extends BaseApi
 		'links' => 'links'
 	];
 	public $query = [
-		'apiKey' => 'ee76c131d9bf443e5afffa9be30dd723',
+		'apiKey' => 'e012c139fe06c839aeebff2208680875',
 		'view' => 'ENHANCED',
 		'field' => 'h-index,surname,given-name,affiliation-name,coredata,document-count,citations-count,cited-by-count',
 	];
