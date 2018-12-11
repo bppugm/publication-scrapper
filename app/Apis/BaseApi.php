@@ -142,6 +142,8 @@ abstract class BaseApi
 	{
 		$body = [];
 
+		$this->setApiKey();
+
 		if (!empty($this->query)) {
 			$body['query'] = $this->query;
 		}
@@ -173,6 +175,11 @@ abstract class BaseApi
 		return [
 			'Accept' => 'application/json',
 		];
+	}
+
+	public function setApiKey()
+	{
+		$this->query['apiKey'] = env('ELSEVIER_API_KEY');
 	}
 
 	/**

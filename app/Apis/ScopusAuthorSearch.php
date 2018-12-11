@@ -8,13 +8,14 @@ namespace App\Apis;
 class ScopusAuthorSearch extends BaseApi
 {
 	public $base_uri = 'https://api.elsevier.com/content/search/author';
+	
 	public $keys = [
 		'data' => 'search-results',
 		'meta' => 'meta',
 		'links' => 'links'
 	];
+
 	public $query = [
-		'apiKey' => 'e012c139fe06c839aeebff2208680875',
 		'query' => 'AF-ID(60069380)',
 	];
 
