@@ -8,10 +8,12 @@ use Illuminate\Database\Seeder;
 class DocumentSeeder extends Seeder
 {
 	protected $client;
+    protected $years;
 
-	function __construct()
+	function __construct($years = [])
 	{
 		$this->setClient();
+        $this->years = [2017, 2018];
 	}
 
 	public function setClient()
@@ -26,13 +28,34 @@ class DocumentSeeder extends Seeder
      */
     public function run()
     {
-    	Document::truncate();
-    	$years = [2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
+    	$this->clearData($this->years);
+
+    	$years = $this->getYears();
 
         foreach ($years as $year) {
             $documents = $this->getDocuments($year);
         	Document::insert($documents);
         }
+    }
+
+    public function clearData($years)
+    {
+        if ($years) {
+            foreach ($years as $year) {
+                Document::where('published_at', 'like', "%$year%")->delete();
+            }
+        } else {
+            Document::truncate();
+        }
+    }
+
+    public function getYears()
+    {
+        if ($this->years) {
+            return $this->years;
+        }
+
+        return [2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
     }
 
     public function getDocuments($year = null)
@@ -74,7 +97,7 @@ class DocumentSeeder extends Seeder
     {
     	$query = [
 			'query' => "PUBYEAR = $year AND AF-ID(60069380)",
-			'apiKey' => 'ee76c131d9bf443e5afffa9be30dd723',
+			'apiKey' => env('ELSEVIER_API_KEY'),
 			'field' => 'citedby-count,author,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,prism:doi,source-id,afid,authkeywords',
 			'view' => 'complete',
 			'start' => 0,

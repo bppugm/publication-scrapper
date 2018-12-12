@@ -23,7 +23,7 @@ class DocumentController extends Controller
 
     	$document = new Document;
 
-    	$documents = $document->filter($request)->paginate(25);
+        $documents = $document->filter($request)->paginate(25);
 
         $metric = $this->documentMetrics($document->filter($request)->get());
 
