@@ -24,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('App\Clients\MicrosoftAcademicClient', function ($app)
+        {
+            return new \App\Clients\MicrosoftAcademicClient(env('MA_API_KEY'));
+        });
     }
 }
