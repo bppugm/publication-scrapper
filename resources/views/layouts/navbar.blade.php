@@ -23,6 +23,9 @@
                     <a class="nav-link" href="{{ route('document.index') }}">Documents</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('microsoft-academic.index') }}">Ms. Academic</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('author.index') }}">Authors</a>
                 </li>
                 <li class="nav-item dropdown">
