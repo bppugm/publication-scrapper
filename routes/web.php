@@ -35,3 +35,11 @@ Route::get('/crossref', function ()
 	$view = view('xml-template.crossref')->render();
 	return $view;
 })->name('crossref.index');
+
+Route::middleware(['auth'])->prefix('microsoft-academic')
+	->name('microsoft-academic.')
+	->group(function ()
+{
+	Route::get('/', 'MicrosoftAcademicController@index')->name('index');
+	Route::post('/', 'MicrosoftAcademicController@store')->name('store');
+});
