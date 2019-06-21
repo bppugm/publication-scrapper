@@ -19,7 +19,7 @@ class MicrosoftAcademicController extends Controller
             'email' => 'required|email'
         ]);
 
-        MicrosoftAcademicScrapper::dispatchNow($request->email, $request->year);
+        MicrosoftAcademicScrapper::dispatch($request->email, $request->year);
 
         return redirect()->route('microsoft-academic.index')
         ->with('success', 'Your request has been processed. Please check your email in a couple minutes.');
