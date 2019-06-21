@@ -19,7 +19,7 @@ class DocumentsTransformer extends JsonResource
             'title' => $this['dc:title'],
             'published_at' => $this['prism:coverDate'],
             'doi' => optional($this)['prism:doi'],
-            'identifier' => $this['dc:identifier'],
+            'identifier' => optional($this)['dc:identifier'],
             'publication_name' => $this['prism:publicationName'],
             'citation_count' => $this['citedby-count'],
             'subtype' => $this['subtype'],
