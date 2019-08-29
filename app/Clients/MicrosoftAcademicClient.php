@@ -22,7 +22,7 @@ class MicrosoftAcademicClient
     {
         $params = array_merge( 
             [
-                'expr' => "AND(Composite(AA.AfN=='gadjah mada university'),Y=$year,L='en') ",
+                'expr' => "AND(Composite(AA.AfN=='gadjah mada university'),Y=$year) ",
                 'attributes' => 'Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN,E.DOI',
                 'offset' => 0,
                 'count' => 100,
