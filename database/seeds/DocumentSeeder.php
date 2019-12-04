@@ -13,7 +13,7 @@ class DocumentSeeder extends Seeder
 	function __construct($years = [])
 	{
 		$this->setClient();
-        $this->years = [2017, 2018];
+        $this->years = [2017, 2018, 2019];
 	}
 
 	public function setClient()
