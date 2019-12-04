@@ -28,9 +28,8 @@ class DocumentSeeder extends Seeder
      */
     public function run()
     {
-    	$this->clearData($this->years);
-
     	$years = $this->getYears();
+    	$this->clearData($years);
 
         foreach ($years as $year) {
             $documents = $this->getDocuments($year);

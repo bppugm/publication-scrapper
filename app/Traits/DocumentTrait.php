@@ -16,7 +16,7 @@ trait DocumentTrait
 	        $result['h_index'][$value] = $documents->where('scimago.h_index', $value)->count();
 	    }
 
-	    $years = ['2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018'];
+	    $years = ['2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019'];
 	    foreach ($years as $year) {
 	        $count = $documents->filter(function ($item) use ($year)
 	        {
