@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\AuthorsTransformer;
+use App\Scimago;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DocumentsTransformer extends JsonResource
@@ -27,6 +28,7 @@ class DocumentsTransformer extends JsonResource
             'source_id' => optional($this)['source-id'],
             'authors' => AuthorsTransformer::collection(collect($this['author']))->jsonSerialize(),
             'keywords' => optional($this)['authkeywords'],
+            'scimago' => optional(Scimago::where('source_id', (int)(optional($this)['source-id']))->first())->toArray(),
         ];
     }
 }
