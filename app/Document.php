@@ -34,6 +34,10 @@ class Document extends Model
             $model = $model->where('published_at', 'like', "%$request->year%");
         }
 
+        if ($request->filled('subtype')) {
+            $model = $model->where('subtype', $request->subtype);
+        }
+
         return $model;
     }    
 }
