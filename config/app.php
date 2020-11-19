@@ -211,4 +211,6 @@ return [
 
     ],
 
+    'affiliation_id' => env('AFFILIATION_ID', 60069380)
+
 ];

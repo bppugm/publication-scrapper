@@ -103,8 +103,10 @@ class DocumentMining extends Command
 
     protected function getQuery($year = 2013, $additional = [])
     {
+        $afId = config('app.affiliation_id');
+        
         $query = [
-            'query' => "PUBYEAR = $year AND AF-ID(60069380)",
+            'query' => "PUBYEAR = $year AND AF-ID($afId)",
             'apiKey' => env('ELSEVIER_API_KEY'),
             'field' => 'citedby-count,author,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,prism:doi,source-id,afid,authkeywords',
             'view' => 'complete',
