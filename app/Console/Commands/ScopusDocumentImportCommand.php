@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Document;
+use App\AuthorDocument;
 use App\Imports\ScopusDocumentImport;
 use Illuminate\Console\Command;
 
@@ -13,7 +13,7 @@ class ScopusDocumentImportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'scopus:import';
+    protected $signature = 'scopus:import {filename=scopus.csv}';
 
     /**
      * The console command description.
@@ -39,8 +39,8 @@ class ScopusDocumentImportCommand extends Command
      */
     public function handle()
     {
-        Document::truncate();
+        AuthorDocument::truncate();
         $import = new ScopusDocumentImport;
-        $import->withOutput($this->output)->import(base_path('scopus.csv'));
+        $import->withOutput($this->output)->import(base_path($this->argument('filename')));
     }
 }
