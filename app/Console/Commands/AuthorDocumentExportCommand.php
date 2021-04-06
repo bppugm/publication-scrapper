@@ -38,7 +38,8 @@ class AuthorDocumentExportCommand extends Command
      */
     public function handle()
     {
+        $date = now()->format('dmYHis');
         $export = new AuthorDocumentExport;
-        $export->store('author_document.xlsx', 'local');
+        $export->store("pivot_{$date}.xlsx", 'local');
     }
 }

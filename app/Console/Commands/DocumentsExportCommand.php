@@ -38,7 +38,8 @@ class DocumentsExportCommand extends Command
      */
     public function handle()
     {
+        $date = now()->format('dmYHis');
         $export = new DocumentsExport;
-        $export->store('documents.xlsx', 'local');
+        $export->store("documents_{$date}.xlsx", 'local');
     }
 }
