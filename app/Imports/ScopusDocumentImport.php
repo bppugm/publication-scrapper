@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\AuthorDocument;
 use App\Document;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Collection;
@@ -28,7 +29,7 @@ class ScopusDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
         });
 
         foreach ($authors as $key => $value) {
-            $record = Document::create([
+            $record = AuthorDocument::create([
                 'author_id' => $value,
                 'author' => $key + 1,
                 'title' => $row['title']
