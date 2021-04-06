@@ -9,21 +9,21 @@ class MicrosoftAcademicClient
 {
     protected $client;
 
-    public function __construct($apiKey = null) {
+    public function __construct() {
         $this->client = new Client([
             'base_uri' => 'https://api.labs.cognitive.microsoft.com/academic/v1.0/',
             'headers' => [
-                'Ocp-Apim-Subscription-Key' => $apiKey
+                'Ocp-Apim-Subscription-Key' => config('app.ma_api_key')
             ]
         ]);
     }
 
-    public function evaluate(array $params = [], $year = 2019, FormatterInterface $formatter = null)
+    public function evaluate(array $params = [], $year = 2019)
     {
         $params = array_merge( 
             [
                 'expr' => "AND(Composite(AA.AfN=='gadjah mada university'),Y=$year) ",
-                'attributes' => 'Id,C.CId,C.CN,L,Y,Ti,CC,J.JN,J.JId,AA.AuN,AA.AfN,E.DOI',
+                'attributes' => 'Id,Ti,Ty,Y,CC,J.JN,J.JId,AA.AuN,AA.AuId,AA.AfN,AA.AfId,C.CN,DOI,Pt',
                 'offset' => 0,
                 'count' => 100,
             ], $params
@@ -34,10 +34,6 @@ class MicrosoftAcademicClient
         ]);
 
         $body = json_decode($reponse->getBody(), true);
-
-        if ($formatter) {
-            return $formatter->format($body);
-        }
 
         return $body;
     }
