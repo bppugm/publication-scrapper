@@ -15,7 +15,7 @@ class MaDocumentFetchCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ma_document:fetch';
+    protected $signature = 'ma_document:fetch {year?} {--biodiversity}';
 
     /**
      * The console command description.
@@ -49,20 +49,28 @@ class MaDocumentFetchCommand extends Command
         $offset = 0;
         $count = 1;
 
-        while ($count != 0) {
-            $response = $client->evaluate(['offset' => $offset], 2021);
+        $year = $this->argument('year') ?: now()->year;
 
-            $offset = $offset + 100;
+        while ($count != 0) {
+            $query = ['offset' => $offset];
+
+            if ($this->option('biodiversity')) {
+                $query['expr'] = "AND(Composite(AA.AfN=='gadjah mada university'),Y=$year,OR(Composite(F.FN='biodiversity'),Composite(F.FN='biology'),Composite(F.FN='deforestation'),Composite(F.FN='indigenous'),Composite(F.FN='forestry'),Composite(F.FN='tropics'),Composite(F.FN='agriculture'),Composite(F.FN='forest plot'),Composite(F.FN='forest change'),Composite(F.FN='forest cover'),Composite(F.FN='forest ecology'),Composite(F.FN='biochemistry'),Composite(F.FN='biotechnology'),Composite(F.FN='microbiology'),Composite(F.FN='conservation dependent species'),Composite(F.FN='oceanography'),Composite(F.FN='fishery'),Composite(F.FN='zoo'),Composite(F.FN='aquarium'),Composite(F.FN='threatened species'),Composite(F.FN='natural resource'),Composite(F.FN='cultural diversity'),Composite(F.FN='sociocultural perspective'),Composite(F.FN='plant science'),Composite(F.FN='animal science'),Composite(F.FN='earth science'),Composite(F.FN='water resources')))";
+            }
+
+            $response = $client->evaluate($query, $year);
+
             $documents = collect($response['entities']);
 
-            $documents->each(function ($document) {
+            $documents->each(function ($document, $index) use ($offset) {
                 $document = optional($document);
                 $journal = $document['J'] ? $document['J']['JN'] : '';
                 $this->info('Imported document: ' . $document['Ti']);
                 $document = Document::create([
+                    'no' => $offset+$index+1,
                     'article_id' => $document['Id'],
-                    'faculty' => '',
                     'title' => $document['Ti'],
+                    'faculty' => '',
                     'authors' => $document['AA'],
                     'year' => $document['Y'],
                     'journal' => $journal,
@@ -84,6 +92,7 @@ class MaDocumentFetchCommand extends Command
             });
 
             $count =  count($response['entities']);
+            $offset = $offset + 100;
         }
     }
 
