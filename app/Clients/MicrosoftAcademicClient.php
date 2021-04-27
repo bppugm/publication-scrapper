@@ -5,7 +5,7 @@ namespace App\Clients;
 use GuzzleHttp\Client;
 use App\Formatters\FormatterInterface;
 
-class MicrosoftAcademicClient  
+class MicrosoftAcademicClient
 {
     protected $client;
 
@@ -20,10 +20,10 @@ class MicrosoftAcademicClient
 
     public function evaluate(array $params = [], $year = 2019)
     {
-        $params = array_merge( 
+        $params = array_merge(
             [
                 'expr' => "AND(Composite(AA.AfN=='gadjah mada university'),Y=$year) ",
-                'attributes' => 'Id,Ti,Ty,Y,CC,J.JN,J.JId,AA.AuN,AA.AuId,AA.AfN,AA.AfId,C.CN,DOI,Pt',
+                'attributes' => 'Id,Ti,Ty,Y,CC,J.JN,J.JId,AA.AuN,AA.AuId,AA.AfN,AA.AfId,C.CN,DOI,Pt,V,I,LP,FP',
                 'offset' => 0,
                 'count' => 100,
             ], $params

@@ -74,6 +74,10 @@ class MaDocumentFetchCommand extends Command
                     'authors' => $document['AA'],
                     'year' => $document['Y'],
                     'journal' => $journal,
+                    'volume' => $document['V'],
+                    'issue' => $document['I'],
+                    'first_page' => $document['FP'],
+                    'last_page' => $document['LP'],
                     'DOI' => $document['DOI'],
                     'type' => $this->getPublicationType($document['Pt']),
                     'language' => ''
