@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
 
-class ScopusDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
+class ScopusPivotImport implements WithHeadingRow, OnEachRow, WithProgressBar
 {
     use Importable;
 
@@ -35,6 +35,6 @@ class ScopusDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
                 'title' => $row['title']
             ]);
         }
-        
+
     }
 }
