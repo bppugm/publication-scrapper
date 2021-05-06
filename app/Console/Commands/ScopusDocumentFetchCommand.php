@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Author;
+use App\AuthorDocument;
 use App\Document;
 use finfo;
 use GuzzleHttp\Client;
@@ -49,11 +50,12 @@ class ScopusDocumentFetchCommand extends Command
      */
     public function handle()
     {
-        Document::truncate();
+        // Document::truncate();
+        // AuthorDocument::truncate();
 
         $body = [
-            'query' => 'pubdatetxt(2016) AF-ID(60069380)',
-            'field' => 'authid,authname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,prism:doi,source-id,author-url',
+            'query' => 'pubdatetxt(2015) AND AF-ID(60069380)',
+            'field' => 'authid,authname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,prism:doi,source-id,author-url,prism:coverDate',
             'count' => 100,
             // 'view' => 'complete',
             'start' => 0
@@ -98,6 +100,10 @@ class ScopusDocumentFetchCommand extends Command
                         $item['is_ugm'] = $isUgm;
                     }
 
+                    if ($faculty == null) {
+                        AuthorDocument::create($item);
+                    }
+
                     $authors[] = $item;
                 }
 
@@ -115,6 +121,7 @@ class ScopusDocumentFetchCommand extends Command
                     'doi' => $document['prism:doi'],
                 ],
                 [
+                    'year' => substr($document['prism:coverDate'], 0, 4),
                     'doi' => $document['prism:doi'],
                     'title' => $document['dc:title'],
                     'url' => $document['prism:url'],
@@ -122,7 +129,7 @@ class ScopusDocumentFetchCommand extends Command
                     'faculties' => $faculties
                 ]);
 
-                $this->info($record->title." Created");
+                $this->info($record->title." Created [{$record->year}]");
             }
 
             $body['start'] = $body['start'] + 100;
