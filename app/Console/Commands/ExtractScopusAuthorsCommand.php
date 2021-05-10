@@ -41,12 +41,12 @@ class ExtractScopusAuthorsCommand extends Command
     {
         AuthorDocument::truncate();
 
-        Document::where('faculties', "")->chunk(100, function ($documents)
+        Document::where('authors.faculty', null)->chunk(100, function ($documents)
         {
             foreach ($documents as $key => $document) {
                 $this->info("Exporting {$document->title} [{$document->year}]");
                 foreach ($document->authors as $author) {
-                    if (optional($author)['is_ugm']) {
+                    if (optional($author)['is_ugm'] && optional($author)['faculty'] == null) {
                         $author['document_scopus_id'] = $document->identifier;
                         AuthorDocument::create($author);
                     }
