@@ -2,26 +2,25 @@
 
 namespace App\Console\Commands;
 
-use App\AuthorDocument;
-use App\Imports\ScopusDocumentImport;
-use App\Imports\ScopusPivotImport;
+use App\Author;
+use App\Imports\ScopusAuthorImport;
 use Illuminate\Console\Command;
 
-class ScopusDocumentImportCommand extends Command
+class ImportAuthorCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'scopus_author:import {filename=scopus.csv}';
+    protected $signature = 'author:import {filename=authors.csv}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import Scopus';
+    protected $description = 'Import Authors';
 
     /**
      * Create a new command instance.
@@ -40,8 +39,9 @@ class ScopusDocumentImportCommand extends Command
      */
     public function handle()
     {
-        AuthorDocument::truncate();
-        $import = new ScopusPivotImport;
+        Author::truncate();
+
+        $import = new ScopusAuthorImport;
         $import->withOutput($this->output)->import(base_path($this->argument('filename')));
     }
 }
