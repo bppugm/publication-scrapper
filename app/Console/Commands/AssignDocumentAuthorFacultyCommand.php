@@ -43,16 +43,31 @@ class AssignDocumentAuthorFacultyCommand extends Command
 
         foreach ($documents as $document) {
             foreach ($document->authors as $key => $author) {
-                if (optional($author)['faculty'] == null && optional($author)['is_ugm'] == true) {
-                    $faculty = optional(Author::where('author_id', $author['authid'])->first())->faculty;
-                    $document->update(["authors.$key.faculty" => $faculty]);
+                if (optional($author)['is_ugm'] == true) {
+                    $data = optional(Author::where('author_id', $author['authid'])->first());
+                    $document->update(["authors.$key.faculty" => $data->faculty]);
+                    $document->update(["authors.$key.nidn" => $data->nidn]);
+                    $document->update(["authors.$key.nip" => $data->nip]);
                     $this->info("Updating author_id {$author['authid']} on document {$document->title}");
                 }
             }
             $faculties = collect($document->authors)->pluck('faculty')->filter(function ($item) {
                 return $item != null;
             })->unique()->implode(',');
-            $document->update(['faculties' => $faculties]);
+
+            $nidn = collect($document->authors)->pluck('nidn')->filter(function ($item) {
+                return $item != null;
+            })->unique()->implode(',');
+
+            $nip = collect($document->authors)->pluck('nip')->filter(function ($item) {
+                return $item != null;
+            })->unique()->implode(',');
+
+            $document->update([
+                'faculties' => $faculties,
+                'nidn' => $nidn,
+                'nip' => $nip
+            ]);
         }
     }
 }

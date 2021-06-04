@@ -41,7 +41,7 @@ class ExtractScopusAuthorsCommand extends Command
     {
         AuthorDocument::truncate();
 
-        Document::where('authors.faculty', null)->chunk(100, function ($documents)
+        Document::where('faculties', "")->chunk(100, function ($documents)
         {
             foreach ($documents as $key => $document) {
                 $this->info("Exporting {$document->title} [{$document->year}]");

@@ -50,12 +50,12 @@ class ScopusDocumentFetchCommand extends Command
      */
     public function handle()
     {
-        // Document::truncate();
+        Document::truncate();
         // AuthorDocument::truncate();
 
         $body = [
-            'query' => 'pubdatetxt(2015) AND AF-ID(60069380)',
-            'field' => 'authid,authname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,prism:doi,source-id,author-url,prism:coverDate',
+            'query' => '(pubdatetxt(2021)) AND AF-ID(60069380)',
+            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid',
             'count' => 100,
             // 'view' => 'complete',
             'start' => 0
@@ -81,14 +81,16 @@ class ScopusDocumentFetchCommand extends Command
                 $authors = [];
                 foreach ($document['author'] as $key => $author) {
 
-                    $faculty = optional(Author::where('author_id', $author['authid'])->first())->faculty;
-
+                    $data = optional(Author::where('author_id', $author['authid'])->first());
+                    $name = ltrim("{$author['given-name']} {$author['surname']}");
                     $item = [
                         'index' => $key+1,
                         'url' => $author['author-url'],
-                        'authorname' => $author['authname'],
+                        'authorname' => $name,
                         'authid' => $author['authid'],
-                        'faculty' => $faculty,
+                        'faculty' => $data->faculty,
+                        'nidn' => $data->nidn,
+                        'nip' => $data->nip,
                     ];
 
                     if (key_exists('afid', $author)) {
@@ -98,10 +100,6 @@ class ScopusDocumentFetchCommand extends Command
                         })->toArray();
                         $isUgm = collect($item['affiliations'])->contains('60069380');
                         $item['is_ugm'] = $isUgm;
-                    }
-
-                    if ($faculty == null) {
-                        AuthorDocument::create($item);
                     }
 
                     $authors[] = $item;
@@ -116,17 +114,37 @@ class ScopusDocumentFetchCommand extends Command
                     return $item != null;
                 })->implode(',');
 
+                $nidn = collect($authors)->map(function ($item) {
+                    return optional($item)['nidn'];
+                })->unique()
+                ->filter(function ($item) {
+                    return $item != null;
+                })->implode(',');
+
+                $nip = collect($authors)->map(function ($item) {
+                    return optional($item)['nip'];
+                })->unique()
+                ->filter(function ($item) {
+                    return $item != null;
+                })->implode(',');
+
                 $record = Document::firstOrCreate([
                     'identifier' => $document["dc:identifier"],
-                    'doi' => $document['prism:doi'],
+                    'eid' => $document['eid'],
                 ],
                 [
                     'year' => substr($document['prism:coverDate'], 0, 4),
+                    'type' => $document['subtypeDescription'],
                     'doi' => $document['prism:doi'],
                     'title' => $document['dc:title'],
-                    'url' => $document['prism:url'],
+                    'issn' => $document['prism:issn'] ? implode("-", str_split($document['prism:issn'], 4)) : '',
+                    'vol' => $document['prism:volume'],
+                    'issue' => $document['prism:issueIdentifier'],
+                    'page' => $document['prism:pageRange'],
                     'authors' => $authors,
-                    'faculties' => $faculties
+                    'faculties' => $faculties,
+                    'nidn' => $nidn,
+                    'nip' => $nip,
                 ]);
 
                 $this->info($record->title." Created [{$record->year}]");
