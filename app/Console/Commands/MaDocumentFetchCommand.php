@@ -92,19 +92,9 @@ class MaDocumentFetchCommand extends Command
                     return $item != null;
                 })->implode(',');
 
-                $nidn = $authors->map(function ($item) {
-                    return optional($item)['nidn'];
-                })->unique()
-                ->filter(function ($item) {
-                    return $item != null;
-                })->implode(',');
-
-                $nip = $authors->map(function ($item) {
+                $selectedAuthor = $authors->filter(function ($item) {
                     return optional($item)['nip'];
-                })->unique()
-                ->filter(function ($item) {
-                    return $item != null;
-                })->implode(',');
+                })->first();
 
                 $this->info('Imported document: ' . $document['Ti']);
                 $document = Document::create([
@@ -112,9 +102,6 @@ class MaDocumentFetchCommand extends Command
                     'article_id' => $document['Id'],
                     'title' => $document['Ti'],
                     'authors' => $authors->toArray(),
-                    'faculties' => $faculties,
-                    'nidn' => $nidn,
-                    'nip' => $nip,
                     'year' => $document['Y'],
                     'journal' => $journal,
                     'volume' => $document['V'],
@@ -123,7 +110,11 @@ class MaDocumentFetchCommand extends Command
                     'last_page' => $document['LP'],
                     'DOI' => $document['DOI'],
                     'type' => $this->getPublicationType($document['Pt']),
-                    'language' => ''
+                    'language' => '',
+                    'faculties' => $faculties,
+                    'selected_author' => optional($selectedAuthor)['authorname'],
+                    'selected_nip' => optional($selectedAuthor)['nip'] ? $selectedAuthor['nip'] : '',
+                    'selected_nidn' => optional($selectedAuthor)['nidn']
                 ]);
 
                 // foreach ($document->authors as $key => $author) {

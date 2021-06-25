@@ -51,7 +51,7 @@ class ScopusDocumentFetchCommand extends Command
     public function handle()
     {
         Document::truncate();
-        // AuthorDocument::truncate();
+        AuthorDocument::truncate();
 
         $body = [
             'query' => '(pubdatetxt(2021)) AND AF-ID(60069380)',
@@ -70,10 +70,8 @@ class ScopusDocumentFetchCommand extends Command
 
             $response = json_decode($json, true);
 
-            $count = $response["search-results"]["opensearch:totalResults"];
-
-            if ($count == 0) {
-                return;
+            if (array_key_exists('entry', $response["search-results"]) == false) {
+                break;
             }
 
             foreach ($response["search-results"]["entry"] as $key => $document) {
@@ -114,19 +112,9 @@ class ScopusDocumentFetchCommand extends Command
                     return $item != null;
                 })->implode(',');
 
-                $nidn = collect($authors)->map(function ($item) {
-                    return optional($item)['nidn'];
-                })->unique()
-                ->filter(function ($item) {
-                    return $item != null;
-                })->implode(',');
-
-                $nip = collect($authors)->map(function ($item) {
+                $selectedAuthor = collect($authors)->filter(function ($item) {
                     return optional($item)['nip'];
-                })->unique()
-                ->filter(function ($item) {
-                    return $item != null;
-                })->implode(',');
+                })->first();
 
                 $record = Document::firstOrCreate([
                     'identifier' => $document["dc:identifier"],
@@ -143,8 +131,9 @@ class ScopusDocumentFetchCommand extends Command
                     'page' => $document['prism:pageRange'],
                     'authors' => $authors,
                     'faculties' => $faculties,
-                    'nidn' => $nidn,
-                    'nip' => $nip,
+                    'selected_author' => optional($selectedAuthor)['authorname'],
+                    'selected_nip' => optional($selectedAuthor)['nip'] ? $selectedAuthor['nip'] : '',
+                    'selected_nidn' => optional($selectedAuthor)['nidn']
                 ]);
 
                 $this->info($record->title." Created [{$record->year}]");
@@ -153,6 +142,17 @@ class ScopusDocumentFetchCommand extends Command
             $body['start'] = $body['start'] + 100;
         }
 
+        $this->line("");
+        $this->line("Extracting unidentified authors");
 
+        $this->call('scopus_author:extract');
+        $count = AuthorDocument::count();
+
+        if ($count) {
+            $this->call('author_document:export');
+            $this->info("$count unidentified authors has been exported.");
+        } else {
+            $this->info("No unidentified authors found. Documents are ready to be exported.");
+        }
     }
 }
