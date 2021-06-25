@@ -24,11 +24,12 @@ class ScopusAuthorImport implements WithHeadingRow, OnEachRow, WithProgressBar
         $author = $row->toArray();
 
         $record = Author::create([
-            'author_id' => "{$author['scopus_id']}",
+            'author_id' => "{$author['author_id']}",
             'name' => $author['name'],
             'faculty' => $author['faculty'],
             'nidn' => optional($author)['nidn'],
-            'nip' => optional($author)['nip']
+            'nip' => optional($author)['nip'],
+            'ma_id' => optional($author)['ma_id'],
         ]);
     }
 }
