@@ -65,13 +65,56 @@ class MaDocumentFetchCommand extends Command
             $documents->each(function ($document, $index) use ($offset) {
                 $document = optional($document);
                 $journal = $document['J'] ? $document['J']['JN'] : '';
+
+                $authors = collect($document['AA'])->map(function ($item, $index) {
+                    $data = optional(Author::where('ma_id', $item['AuId'])->first());
+
+                    if (!$data) {
+                        $data = optional(Author::where('name', $item['AuN'])->first());
+                    }
+
+                    return [
+                        'index' => $index+1,
+                        'authorname' =>  $item['AuN'],
+                        'authid' => $item['AuId'],
+                        'faculty' => $data->faculty,
+                        'nidn' => $data->nidn,
+                        'nip' => $data->nip,
+                    ];
+                });
+
+                $faculties = $authors->map(function ($item)
+                {
+                    return optional($item)['faculty'];
+                })->unique()
+                ->filter(function ($item)
+                {
+                    return $item != null;
+                })->implode(',');
+
+                $nidn = $authors->map(function ($item) {
+                    return optional($item)['nidn'];
+                })->unique()
+                ->filter(function ($item) {
+                    return $item != null;
+                })->implode(',');
+
+                $nip = $authors->map(function ($item) {
+                    return optional($item)['nip'];
+                })->unique()
+                ->filter(function ($item) {
+                    return $item != null;
+                })->implode(',');
+
                 $this->info('Imported document: ' . $document['Ti']);
                 $document = Document::create([
                     'no' => $offset+$index+1,
                     'article_id' => $document['Id'],
                     'title' => $document['Ti'],
-                    'faculty' => '',
-                    'authors' => $document['AA'],
+                    'authors' => $authors->toArray(),
+                    'faculties' => $faculties,
+                    'nidn' => $nidn,
+                    'nip' => $nip,
                     'year' => $document['Y'],
                     'journal' => $journal,
                     'volume' => $document['V'],
@@ -83,16 +126,16 @@ class MaDocumentFetchCommand extends Command
                     'language' => ''
                 ]);
 
-                foreach ($document->authors as $key => $author) {
-                    if ($author['AfId'] == 165230279) {
-                        AuthorDocument::create([
-                            'title' => $document->title,
-                            'author_name' => $author['AuN'],
-                            'author_index' => $key + 1,
-                            'author_id' => $author['AuId'],
-                        ]);
-                    }
-                }
+                // foreach ($document->authors as $key => $author) {
+                //     if ($author['AfId'] == 165230279) {
+                //         AuthorDocument::create([
+                //             'title' => $document->title,
+                //             'author_name' => $author['AuN'],
+                //             'author_index' => $key + 1,
+                //             'author_id' => $author['AuId'],
+                //         ]);
+                //     }
+                // }
             });
 
             $count =  count($response['entities']);
