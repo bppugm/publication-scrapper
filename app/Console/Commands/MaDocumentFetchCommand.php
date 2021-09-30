@@ -100,8 +100,16 @@ class MaDocumentFetchCommand extends Command
                     return optional($item)['nip'];
                 })->first();
 
-                $this->info('Imported document: ' . $document['Ti']);
                 $language = $this->detector->evaluate($document['Ti'])->getLanguage()->__toString();
+
+                $scores = collect($this->detector->getScores())->splice(0, 2);
+                $values = $scores->values();
+                $scoreDiff = $values[0] - $values[1];
+                if ($scoreDiff <= 0.03) {
+                    $language = $scores->keys()->implode(',');
+                }
+
+                $this->info('Imported document: ' . $document['Ti']);
                 $document = Document::create([
                     'no' => $offset+$index+1,
                     'article_id' => $document['Id'],
@@ -116,6 +124,7 @@ class MaDocumentFetchCommand extends Command
                     'DOI' => $document['DOI'],
                     'type' => $this->getPublicationType($document['Pt']),
                     'language' => $language,
+                    'diff_scores' => $scoreDiff,
                     'faculties' => $faculties,
                     'selected_author' => optional($selectedAuthor)['authorname'],
                     'selected_nip' => optional($selectedAuthor)['nip'] ? $selectedAuthor['nip'] : '',
