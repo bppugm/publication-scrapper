@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\AuthorDocument;
+use App\Document;
 use App\Imports\ScopusDocumentImport;
 use App\Imports\ScopusPivotImport;
 use Illuminate\Console\Command;
@@ -40,8 +41,8 @@ class ScopusDocumentImportCommand extends Command
      */
     public function handle()
     {
-        AuthorDocument::truncate();
-        $import = new ScopusPivotImport;
+        Document::truncate();
+        $import = new ScopusDocumentImport;
         $import->withOutput($this->output)->import(base_path($this->argument('filename')));
     }
 }
