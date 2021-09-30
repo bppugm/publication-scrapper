@@ -7,6 +7,7 @@ use App\AuthorDocument;
 use App\Document;
 use Illuminate\Console\Command;
 use App\Clients\MicrosoftAcademicClient;
+use LanguageDetector\LanguageDetector;
 
 class MaDocumentFetchCommand extends Command
 {
@@ -24,6 +25,8 @@ class MaDocumentFetchCommand extends Command
      */
     protected $description = 'Fetch Microsoft Academic Documents';
 
+    public $detector;
+
     /**
      * Create a new command instance.
      *
@@ -32,6 +35,7 @@ class MaDocumentFetchCommand extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->detector = new LanguageDetector(null, ['en', 'id', 'ru', 'ja', 'ar']);
     }
 
     /**
@@ -97,6 +101,7 @@ class MaDocumentFetchCommand extends Command
                 })->first();
 
                 $this->info('Imported document: ' . $document['Ti']);
+                $language = $this->detector->evaluate($document['Ti'])->getLanguage()->__toString();
                 $document = Document::create([
                     'no' => $offset+$index+1,
                     'article_id' => $document['Id'],
@@ -110,7 +115,7 @@ class MaDocumentFetchCommand extends Command
                     'last_page' => $document['LP'],
                     'DOI' => $document['DOI'],
                     'type' => $this->getPublicationType($document['Pt']),
-                    'language' => '',
+                    'language' => $language,
                     'faculties' => $faculties,
                     'selected_author' => optional($selectedAuthor)['authorname'],
                     'selected_nip' => optional($selectedAuthor)['nip'] ? $selectedAuthor['nip'] : '',
