@@ -23,7 +23,6 @@ class ScopusDocumentImport implements OnEachRow, WithHeadingRow, WithProgressBar
         $authors = [];
         foreach (explode(";", $row['authors_id']) as $key => $id) {
             $author = Author::where('author_id', $id)->first();
-
             if ($author) {
                 $authors[] = [
                     'index' => $key + 1,
@@ -34,41 +33,42 @@ class ScopusDocumentImport implements OnEachRow, WithHeadingRow, WithProgressBar
                     'nip' => $author->nip,
                 ];
             }
-
-            $faculties = collect($authors)->map(function ($item) {
-                return optional($item)['faculty'];
-            })->unique()
-                ->filter(function ($item) {
-                    return $item != null;
-                })->implode(',');
-
-            $selectedAuthor = collect($authors)->filter(function ($item) {
-                return optional($item)['nip'];
-            })->first();
-
-            $record = Document::firstOrCreate(
-                [
-                    'eid' => $document['eid'],
-                ],
-                [
-                    'year' => $document['year'],
-                    'document_type' => $document['document_type'],
-                    'doi' => $document['doi'],
-                    'title' => $document['title'],
-                    'source_title' => $document['source_title'],
-                    'issn' => $document['issn'] ? implode("-", str_split($document['issn'], 4)) : '',
-                    'vol' => $document['volume'],
-                    'issue' => $document['issue'],
-                    'page_start' => $document['page_start'],
-                    'page_end' => $document['page_start'],
-                    'authors' => $authors,
-                    'faculties' => $faculties,
-                    'selected_author' => optional($selectedAuthor)['authorname'],
-                    'selected_nip' => optional($selectedAuthor)['nip'] ? $selectedAuthor['nip'] : '',
-                    'selected_nidn' => optional($selectedAuthor)['nidn']
-                ]
-            );
-
         }
+
+        $faculties = collect($authors)->map(function ($item) {
+            return optional($item)['faculty'];
+        })->unique()
+            ->filter(function ($item) {
+                return $item != null;
+            })->implode(',');
+
+        $selectedAuthor = collect($authors)->filter(function ($item) {
+            return optional($item)['nip'];
+        })->first();
+
+        $record = Document::firstOrCreate(
+            [
+                'eid' => $document['eid'],
+            ],
+            [
+                'year' => $document['year'],
+                'document_type' => $document['document_type'],
+                'doi' => $document['doi'],
+                'title' => $document['title'],
+                'source_title' => $document['source_title'],
+                'issn' => $document['issn'] ? implode("-", str_split($document['issn'], 4)) : '',
+                'vol' => $document['volume'],
+                'issue' => $document['issue'],
+                'page_start' => $document['page_start'],
+                'page_end' => $document['page_start'],
+                'cited_by' => $document['cited_by'],
+                'authors' => $authors,
+                'faculties' => $faculties,
+                'selected_author' => optional($selectedAuthor)['authorname'],
+                'selected_index' => optional($selectedAuthor)['index'],
+                'selected_nip' => optional($selectedAuthor)['nip'] ? $selectedAuthor['nip'] : '',
+                'selected_nidn' => optional($selectedAuthor)['nidn']
+            ]
+        );
     }
 }
