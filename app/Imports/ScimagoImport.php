@@ -18,8 +18,10 @@ class ScimagoImport implements WithHeadingRow, OnEachRow, WithProgressBar
     {
         $data = $row->toArray();
         $scimago = [
-            'Sourceid' => $data['sourceid'],
-            'H index' => $data['h_index']
+            'source_id' => $data['sourceid'],
+            'source_title' => $data['title'],
+            'quartile' => $data['quartile'],
+            'h_index' => $data['h_index'],
         ];
 
         Scimago::create($scimago);
