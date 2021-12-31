@@ -15,7 +15,7 @@ class ScopusDocumentImportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'scopus_author:import {filename=scopus.csv}';
+    protected $signature = 'scopus_document:import {filename=scopus.csv}';
 
     /**
      * The console command description.
