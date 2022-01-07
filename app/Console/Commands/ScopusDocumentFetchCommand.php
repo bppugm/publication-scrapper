@@ -18,7 +18,7 @@ class ScopusDocumentFetchCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'scopus_document:fetch';
+    protected $signature = 'scopus_document:fetch {year?}';
 
     /**
      * The console command description.
@@ -53,8 +53,10 @@ class ScopusDocumentFetchCommand extends Command
         Document::truncate();
         AuthorDocument::truncate();
 
+        $year = $this->argument('year') ?: now()->year;
+
         $body = [
-            'query' => '(pubdatetxt(2021)) AND AF-ID(60069380)',
+            'query' => "(pubdatetxt($year)) AND AF-ID(60069380)",
             'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid',
             'count' => 100,
             // 'view' => 'complete',
