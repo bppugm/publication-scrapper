@@ -7,11 +7,21 @@ use Illuminate\Support\Facades\Cache;
 
 class SintaClient
 {
+    /**
+     * Client
+     *
+     * @var Client
+     */
     public $client;
 
     protected $cache_key = "sintaApiKey";
 
     public function __construct() {
+        $this->setup();
+    }
+
+    public function setup()
+    {
         $this->client = new Client([
             'base_uri' => 'http://apisinta.kemdikbud.go.id/',
             'headers' => [
