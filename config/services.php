@@ -35,4 +35,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'sinta' => [
+        'username' => env('SINTA_USERNAME'),
+        'password' => env("SINTA_PASSWORD")
+    ]
+
 ];
