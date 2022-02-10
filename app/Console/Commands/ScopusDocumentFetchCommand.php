@@ -57,7 +57,7 @@ class ScopusDocumentFetchCommand extends Command
 
         $body = [
             // 'query' => "(pubdatetxt($year)) AND AF-ID(60069380)",
-            'query' => "AND AF-ID(60069380)",
+            'query' => "AF-ID(60069380)",
             'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid',
             'count' => 100,
             // 'view' => 'complete',
