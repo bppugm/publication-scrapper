@@ -18,9 +18,6 @@ class SintaJournalsExport implements FromArray, WithHeadings
         $this->journals = $journals;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
     public function array(): array
     {
         return $this->journals;

@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use App\Clients\SintaClient;
-use App\Exports\SintaJournalsExport;
 use Illuminate\Console\Command;
+use App\Exports\SintaJournalsExport;
 
 class FetchSintaJournalsCommand extends Command
 {
@@ -54,6 +55,7 @@ class FetchSintaJournalsCommand extends Command
                 $response = $client->listJournals($params);
             } catch (\Throwable $th) {
                 if ($th->getCode() == 500) {
+                    $client->forgetApiKey();
                     $client->setup();
                     $response = $client->listJournals($params);
                 } else {
