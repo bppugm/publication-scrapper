@@ -56,8 +56,8 @@ class ScopusDocumentFetchCommand extends Command
         $year = $this->argument('year') ?: now()->year;
 
         $body = [
-            // 'query' => "(pubdatetxt($year)) AND AF-ID(60069380)",
-            'query' => "AF-ID(60069380) AND (PUBYEAR < 2017)",
+            'query' => "(PUBYEAR = $year) AND AF-ID(60069380)",
+            // 'query' => "AF-ID(60069380) AND (PUBYEAR < 2017)",
             'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid',
             'count' => 100,
             // 'view' => 'complete',
