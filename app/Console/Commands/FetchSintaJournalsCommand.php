@@ -54,6 +54,7 @@ class FetchSintaJournalsCommand extends Command
                 $response = $client->listJournals($params);
             } catch (\Throwable $th) {
                 if ($th->getCode() == 500) {
+                    $client->forgetApiKey();
                     $client->setup();
                     $response = $client->listJournals($params);
                 } else {
