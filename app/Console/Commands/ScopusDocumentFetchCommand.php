@@ -58,7 +58,7 @@ class ScopusDocumentFetchCommand extends Command
         $body = [
             'query' => "(PUBYEAR = $year) AND AF-ID(60069380)",
             // 'query' => "AF-ID(60069380) AND (PUBYEAR < 2017)",
-            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,prism:coverDate,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid',
+            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid',
             'count' => 100,
             // 'view' => 'complete',
             'start' => 0
@@ -80,6 +80,9 @@ class ScopusDocumentFetchCommand extends Command
             foreach ($response["search-results"]["entry"] as $key => $document) {
                 $document = optional($document);
                 $authors = [];
+                if ($document['author'] == null) {
+                    $document['author'] = [];
+                }
                 foreach ($document['author'] as $key => $author) {
 
                     $data = optional(Author::where('author_id', $author['authid'])->first());
@@ -125,6 +128,7 @@ class ScopusDocumentFetchCommand extends Command
                 ],
                 [
                     'year' => substr($document['prism:coverDate'], 0, 4),
+                    'date' => $document['prism:coverDate'],
                     'type' => $document['subtypeDescription'],
                     'doi' => $document['prism:doi'],
                     'title' => $document['dc:title'],
