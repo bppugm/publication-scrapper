@@ -43,11 +43,7 @@ class ImportWosDocumentCommand extends Command
     public function handle()
     {
         if (SimasterAuthor::count() == 0) {
-            $this->info('Importing Simaster author');
-            SimasterAuthor::truncate();
-            $import = new SimasterAuthorImport;
-            $import->withOutput($this->output)->import(base_path('author_simaster.xlsx'));
-            $this->info('Import simaster author finished');
+            $this->call('simaster_author:import');
         }
 
         $import = new WosDocumentImport;
