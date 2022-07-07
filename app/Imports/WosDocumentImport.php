@@ -28,6 +28,7 @@ class WosDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
             if ($author) {
                 $row['names'][$key]['nip'] = $author->nipnika_simaster;
                 $row['names'][$key]['nidn'] = $author->nomor_registrasi;
+                $row['names'][$key]['fakultas'] = $author->fakultas;
             }else {
                 $query = SimasterAuthor::whereRaw([
                     '$text' => [
@@ -41,6 +42,7 @@ class WosDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
                     if ($search->score >= 1) {
                         $row['names'][$key]['nip'] = $search->nipnika_simaster;
                         $row['names'][$key]['nidn'] = $search->nomor_registrasi;
+                        $row['names'][$key]['fakultas'] = $search->fakultas;
                     }
                 }
 
@@ -62,6 +64,10 @@ class WosDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
         $row['first_nidn'] = collect($row['names'])->pluck('nidn')->filter(function ($value) {
             return $value;
         })->first();
+
+        $row['all_fakultas'] = collect($row['names'])->pluck('fakultas')->filter(function ($value) {
+            return $value;
+        })->unique()->implode(",");
         return Document::create($row);
     }
 

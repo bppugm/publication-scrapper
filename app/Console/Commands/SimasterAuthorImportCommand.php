@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\SimasterAuthor;
 use Illuminate\Console\Command;
 use App\Imports\SimasterAuthorImport;
+use Illuminate\Support\Facades\Schema;
 
 class SimasterAuthorImportCommand extends Command
 {
@@ -41,6 +42,9 @@ class SimasterAuthorImportCommand extends Command
     {
         $this->info('Importing Simaster author');
         SimasterAuthor::truncate();
+        Schema::connection('mongodb')->table('simaster_authors', function ($collection) {
+            $collection->index(['nama' => 'text']);
+        });
         $import = new SimasterAuthorImport;
         $import->withOutput($this->output)->import(base_path('author_simaster.xlsx'));
         $this->info('Import simaster author finished');
