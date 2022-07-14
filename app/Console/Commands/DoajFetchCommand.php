@@ -91,6 +91,7 @@ class DoajFetchCommand extends Command
                         $authors[$key]['nip'] = $author->nipnika_simaster;
                         $authors[$key]['nidn'] = $author->nomor_registrasi;
                         $authors[$key]['fakultas'] = $author->fakultas;
+                        $authors[$key]['score'] = $author->score;
                     }
                 }
 
@@ -99,7 +100,9 @@ class DoajFetchCommand extends Command
                 $document['first_name'] = collect($document['authors'])->pluck('searched_name')->filter(function ($value){return $value;})->first();
                 $document['first_nip'] = collect($document['authors'])->pluck('nip')->filter(function ($value){return $value;})->first();
                 $document['first_nidn'] = collect($document['authors'])->pluck('nidn')->filter(function ($value){return $value;})->first();
-                $document['fakultas'] = collect($document['authors'])->pluck('fakultas')->filter(function ($value){return $value;})->unique()->implode(',');
+                $document['first_score'] = collect($document['authors'])->pluck('score')->filter(function ($value){return $value;})->first();
+
+                $document['all_fakultas'] = collect($document['authors'])->pluck('fakultas')->filter(function ($value){return $value;})->unique()->implode(',');
                 $document = Document::create($document);
                 $this->info("Created $document->title");
             }
