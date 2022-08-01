@@ -15,7 +15,7 @@ class FetchEbscoCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'document_ebsco:fetch';
+    protected $signature = 'ebsco_document:fetch';
 
     /**
      * The console command description.
