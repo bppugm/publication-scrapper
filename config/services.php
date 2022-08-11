@@ -38,6 +38,11 @@ return [
     'sinta' => [
         'username' => env('SINTA_USERNAME'),
         'password' => env("SINTA_PASSWORD")
+    ],
+
+    'ebsco' => [
+        'profile' => env('EBSCO_PROFILE'),
+        'password' => env('EBSCO_PASSWORD'),
     ]
 
 ];
