@@ -15,7 +15,7 @@ class FetchEbscoCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ebsco_document:fetch';
+    protected $signature = 'ebsco_document:fetch {year?}';
 
     /**
      * The console command description.
@@ -44,8 +44,10 @@ class FetchEbscoCommand extends Command
         Document::truncate();
         $client = new EbscoClient;
 
+        $year = $this->argument('year') ?: now()->year;
+
         $query = [
-            'query' => "DT 2022 AND AF(gadjah mada)",
+            'query' => "DT $year AND AF(gadjah mada)",
             'startrec' => 1,
             'numrec' => 200,
             'db' => 'a9h'
