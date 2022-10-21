@@ -46,65 +46,83 @@ class DoajFetchCommand extends Command
         $client = new DoajClient;
         Document::truncate();
 
-        $params = [
-            'page' => 1,
-            'pageSize' => 100
+        $countryQueries = [
+            "AND bibjson.journal.country:ID",
+            "AND NOT bibjson.journal.country:ID",
         ];
 
-        $count = 1;
+        foreach ($countryQueries as $country) {
+            $params = [
+                'page' => 1,
+                'pageSize' => 100
+            ];
 
-        while ($count) {
-            $results = $client->searchArticle("bibjson.year:$year AND bibjson.author.affiliation:gadjah Mada", $params);
+            $count = 1;
 
-            $count = count($results['results']);
-            $params['page']++;
+            while ($count) {
+                $results = $client->searchArticle("bibjson.year:$year AND bibjson.author.affiliation:gadjah Mada $country", $params);
 
-            foreach ($results['results'] as $result) {
-                $result = optional($result);
-                $bibjson = optional($result['bibjson']);
-                $document = [
-                    'title' => $bibjson['title'],
-                    'doi' => $this->getIdentifier('doi', $result),
-                    'journal_title' => optional($bibjson['journal'])['title'],
-                    'volume' => optional($bibjson['journal'])['volume'],
-                    'no' => optional($bibjson['journal'])['number'],
-                    'year' => $bibjson['year'],
-                    'lang' => implode(",",optional($bibjson['journal'])['language']),
-                    'start_page' => $bibjson['start_page'],
-                    'end_page' => $bibjson['end_page'],
-                    'p-issn' => $this->getIdentifier('pissn', $result),
-                    'e-issn' => $this->getIdentifier('eissn', $result),
-                    'link' => optional($bibjson['link'])[0] ? $bibjson['link'][0]['url'] : null,
-                    'date' => now()->setDate((int)$bibjson['year'], (int)optional($bibjson)['month'] ?: 1, 1)->format('Y-m-d'),
-                ];
-                $authors = [];
-                foreach (collect($bibjson['author'])->filter(function ($item)
-                {
-                    return Str::contains(strtolower(optional($item)['affiliation']), 'gadjah mada');
-                })->toArray() as $key => $value) {
-                    $author = SimasterAuthor::searchText($value['name']);
+                $count = count($results['results']);
+                $params['page']++;
 
-                    $authors[$key]['name'] = $value['name'];
-                    $authors[$key]['afiliasi'] = optional($value)['affiliation'];
-                    if ($author) {
-                        $authors[$key]['searched_name'] = $author->nama;
-                        $authors[$key]['nip'] = $author->nipnika_simaster;
-                        $authors[$key]['nidn'] = $author->nomor_registrasi;
-                        $authors[$key]['fakultas'] = $author->fakultas;
-                        $authors[$key]['score'] = $author->score;
+                foreach ($results['results'] as $result) {
+                    $result = optional($result);
+                    $bibjson = optional($result['bibjson']);
+                    $document = [
+                        'title' => $bibjson['title'],
+                        'doi' => $this->getIdentifier('doi', $result),
+                        'journal_title' => optional($bibjson['journal'])['title'],
+                        'volume' => optional($bibjson['journal'])['volume'],
+                        'no' => optional($bibjson['journal'])['number'],
+                        'year' => $bibjson['year'],
+                        'lang' => implode(",", optional($bibjson['journal'])['language']),
+                        'start_page' => $bibjson['start_page'],
+                        'end_page' => $bibjson['end_page'],
+                        'p-issn' => $this->getIdentifier('pissn', $result),
+                        'e-issn' => $this->getIdentifier('eissn', $result),
+                        'link' => optional($bibjson['link'])[0] ? $bibjson['link'][0]['url'] : null,
+                        'date' => now()->setDate((int)$bibjson['year'], (int)optional($bibjson)['month'] ?: 1, 1)->format('Y-m-d'),
+                    ];
+                    $authors = [];
+                    foreach (collect($bibjson['author'])->filter(function ($item) {
+                        return Str::contains(strtolower(optional($item)['affiliation']), 'gadjah mada');
+                    })->toArray() as $key => $value) {
+                        $author = SimasterAuthor::searchText($value['name']);
+
+                        $authors[$key]['name'] = $value['name'];
+                        $authors[$key]['afiliasi'] = optional($value)['affiliation'];
+                        if ($author) {
+                            $authors[$key]['searched_name'] = $author->nama;
+                            $authors[$key]['nip'] = $author->nipnika_simaster;
+                            $authors[$key]['nidn'] = $author->nomor_registrasi;
+                            $authors[$key]['fakultas'] = $author->fakultas;
+                            $authors[$key]['score'] = $author->score;
+                        }
                     }
+
+                    $document['authors'] = $authors;
+                    $document['name'] = collect($document['authors'])->filter(function ($value) {
+                        return optional($value)['nip'];
+                    })->pluck('name')->first();
+                    $document['first_name'] = collect($document['authors'])->pluck('searched_name')->filter(function ($value) {
+                        return $value;
+                    })->first();
+                    $document['first_nip'] = collect($document['authors'])->pluck('nip')->filter(function ($value) {
+                        return $value;
+                    })->first();
+                    $document['first_nidn'] = collect($document['authors'])->pluck('nidn')->filter(function ($value) {
+                        return $value;
+                    })->first();
+                    $document['first_score'] = collect($document['authors'])->pluck('score')->filter(function ($value) {
+                        return $value;
+                    })->first();
+
+                    $document['all_fakultas'] = collect($document['authors'])->pluck('fakultas')->filter(function ($value) {
+                        return $value;
+                    })->unique()->implode(',');
+                    $document = Document::create($document);
+                    $this->info("Created $document->title");
                 }
-
-                $document['authors'] = $authors;
-                $document['name'] = collect($document['authors'])->filter(function ($value){return optional($value)['nip'];})->pluck('name')->first();
-                $document['first_name'] = collect($document['authors'])->pluck('searched_name')->filter(function ($value){return $value;})->first();
-                $document['first_nip'] = collect($document['authors'])->pluck('nip')->filter(function ($value){return $value;})->first();
-                $document['first_nidn'] = collect($document['authors'])->pluck('nidn')->filter(function ($value){return $value;})->first();
-                $document['first_score'] = collect($document['authors'])->pluck('score')->filter(function ($value){return $value;})->first();
-
-                $document['all_fakultas'] = collect($document['authors'])->pluck('fakultas')->filter(function ($value){return $value;})->unique()->implode(',');
-                $document = Document::create($document);
-                $this->info("Created $document->title");
             }
         }
     }
