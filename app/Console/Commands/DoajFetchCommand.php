@@ -47,7 +47,8 @@ class DoajFetchCommand extends Command
         Document::truncate();
 
         $countryQueries = [
-            "AND bibjson.journal.country:ID",
+            "AND bibjson.journal.country:ID AND bibjson.month:(1 OR 2 OR 3 OR 4 OR 5 OR 6)",
+            "AND bibjson.journal.country:ID AND NOT bibjson.month:(1 OR 2 OR 3 OR 4 OR 5 OR 6)",
             "AND NOT bibjson.journal.country:ID",
         ];
 
@@ -81,6 +82,7 @@ class DoajFetchCommand extends Command
                             'p-issn' => $this->getIdentifier('pissn', $result),
                             'e-issn' => $this->getIdentifier('eissn', $result),
                             'link' => optional($bibjson['link'])[0] ? $bibjson['link'][0]['url'] : null,
+                            'month' => optional($bibjson)['month'],
                             'date' => now()->setDate((int)$bibjson['year'], (int)optional($bibjson)['month'] ?: 1, 1)->format('Y-m-d'),
                         ];
                         $authors = [];
