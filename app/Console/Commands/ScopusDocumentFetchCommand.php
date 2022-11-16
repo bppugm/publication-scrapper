@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Author;
 use App\AuthorDocument;
+use App\Clients\ScopusSearchClient;
 use App\Document;
 use finfo;
 use GuzzleHttp\Client;
@@ -11,21 +12,24 @@ use Illuminate\Console\Command;
 
 class ScopusDocumentFetchCommand extends Command
 {
-    protected $client;
+    protected $scopus;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'scopus_document:fetch {year?}';
+    protected $signature = 'scopus_document:fetch
+    {year?* : Default to this year. Multiple years are allowed. Seperate multiple years using whitespace.}
+    {--flagship= : Research flagship topic. Available options are: food,energy,health,climate}
+    ';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Fetch scopus documents';
 
     /**
      * Create a new command instance.
@@ -35,12 +39,7 @@ class ScopusDocumentFetchCommand extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->client = new Client([
-            'base_uri' => 'https://api.elsevier.com/content/search/scopus',
-            'headers' => [
-                'X-ELS-APIKey' => env('ELSEVIER_API_KEY')
-            ]
-        ]);
+        $this->scopus = new ScopusSearchClient;
     }
 
     /**
@@ -53,21 +52,34 @@ class ScopusDocumentFetchCommand extends Command
         Document::truncate();
         AuthorDocument::truncate();
 
-        $year = $this->argument('year') ?: now()->year;
+        $years = $this->argument('year') ?: [now()->year];
+
+        $yearQuery = "";
+        foreach ($years as $key => $year) {
+            if ($key >= 1) {
+                $yearQuery .= " OR ";
+            }
+            $yearQuery .= "(PUBYEAR = $year)";
+        }
+
+        $client = $this->scopus->getClient();
 
         $body = [
-            'query' => "(PUBYEAR = $year) AND AF-ID(60069380)",
+            'query' => "($yearQuery) AND AF-ID(60069380)",
             // 'query' => "AF-ID(60069380) AND (PUBYEAR < 2017)",
-            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid',
+            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid,authkeywords',
             'count' => 100,
             // 'view' => 'complete',
             'start' => 0
         ];
 
-        $count = true;
+        if ($this->option('flagship')) {
+            $body['query'] = $body['query']." AND {$this->scopus->getQuery($this->option('flagship'))}";
+        }
 
+        $count = true;
         while ($count != 0) {
-            $json = $this->client->request('GET', '', [
+            $json = $client->request('GET', '', [
                 'query' => $body
             ])->getBody()->getContents();
 
@@ -136,11 +148,12 @@ class ScopusDocumentFetchCommand extends Command
                     'vol' => $document['prism:volume'],
                     'issue' => $document['prism:issueIdentifier'],
                     'page' => $document['prism:pageRange'],
+                    'keywords' => $document['authkeywords'],
                     'authors' => $authors,
                     'faculties' => $faculties,
                     'selected_author' => optional($selectedAuthor)['authorname'],
                     'selected_nip' => optional($selectedAuthor)['nip'] ? $selectedAuthor['nip'] : '',
-                    'selected_nidn' => optional($selectedAuthor)['nidn']
+                    'selected_nidn' => optional($selectedAuthor)['nidn'],
                 ]);
 
                 $this->info($record->title." Created [{$record->year}]");
