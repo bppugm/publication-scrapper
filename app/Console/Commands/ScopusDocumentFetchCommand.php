@@ -67,7 +67,7 @@ class ScopusDocumentFetchCommand extends Command
         $body = [
             'query' => "($yearQuery) AND AF-ID(60069380)",
             // 'query' => "AF-ID(60069380) AND (PUBYEAR < 2017)",
-            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid,authkeywords',
+            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid,authkeywords,affilname',
             'count' => 100,
             // 'view' => 'complete',
             'start' => 0
@@ -114,8 +114,17 @@ class ScopusDocumentFetchCommand extends Command
                         {
                             return $aff['$'];
                         })->toArray();
+                        $item['affiliation_name'] = collect($item['affiliations'])->map(function ($item) use ($document)
+                        {
+                            if (count($document['affiliation']) == 0) {
+                                return [];
+                            }
+
+                            return optional(collect($document['affiliation'])->where('afid', $item)->first())['affilname'];
+                        })->implode(',');
                         $isUgm = collect($item['affiliations'])->contains('60069380');
                         $item['is_ugm'] = $isUgm;
+                        $item['affiliation_count'] = count($item['affiliations']);
                     }
 
                     $authors[] = $item;
@@ -133,7 +142,6 @@ class ScopusDocumentFetchCommand extends Command
                 $selectedAuthor = collect($authors)->filter(function ($item) {
                     return optional($item)['nip'];
                 })->first();
-
                 $record = Document::firstOrCreate([
                     'identifier' => $document["dc:identifier"],
                     'eid' => $document['eid'],
@@ -144,6 +152,7 @@ class ScopusDocumentFetchCommand extends Command
                     'type' => $document['subtypeDescription'],
                     'doi' => $document['prism:doi'],
                     'title' => $document['dc:title'],
+                    'source_title' => $document['prism:publicationName'],
                     'issn' => $document['prism:issn'] ? implode("-", str_split($document['prism:issn'], 4)) : '',
                     'vol' => $document['prism:volume'],
                     'issue' => $document['prism:issueIdentifier'],
@@ -154,8 +163,10 @@ class ScopusDocumentFetchCommand extends Command
                     'selected_author' => optional($selectedAuthor)['authorname'],
                     'selected_nip' => optional($selectedAuthor)['nip'] ? $selectedAuthor['nip'] : '',
                     'selected_nidn' => optional($selectedAuthor)['nidn'],
+                    'selected_index' => optional($selectedAuthor)['index'],
+                    'selected_af' => optional($selectedAuthor)['affiliation_name'],
+                    'selected_af_count' => optional($selectedAuthor)['affiliation_count'],
                 ]);
-
                 $this->info($record->title." Created [{$record->year}]");
             }
 

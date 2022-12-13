@@ -23,6 +23,7 @@ class WosDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
         foreach ($names as $key => $value) {
             $value = $this->transform($value);
             $row['names'][$key]['fullname'] = $value;
+            $row['names'][$key]['index'] = $key+1;
             $author = SimasterAuthor::where('nama', 'like', $value)->first();
 
             if ($author) {
@@ -49,21 +50,24 @@ class WosDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
             }
         }
 
+        $selectedAuthor = collect($row['names'])->filter(function ($item) {
+            return optional($item)['nip'];
+        })->first();
+
+        $row['selected_author'] = optional($selectedAuthor)['fullname'];
+        $row['selected_index'] = optional($selectedAuthor)['index'];
+        $row['selected_nip'] = optional($selectedAuthor)['nip'];
+        $row['selected_nidn'] = optional($selectedAuthor)['nidn'];
+        $row['selected_fakultas'] = optional($selectedAuthor)['fakultas'];
+
         $row['all_nip'] = collect($row['names'])->pluck('nip')->filter(function ($value)
         {
             return $value;
         })->implode(",");
-        $row['first_nip'] = collect($row['names'])->pluck('nip')->filter(function ($value)
-        {
-            return $value;
-        })->first();
 
         $row['all_nidn'] = collect($row['names'])->pluck('nidn')->filter(function ($value) {
             return $value;
         })->implode(",");
-        $row['first_nidn'] = collect($row['names'])->pluck('nidn')->filter(function ($value) {
-            return $value;
-        })->first();
 
         $row['all_fakultas'] = collect($row['names'])->pluck('fakultas')->filter(function ($value) {
             return $value;
