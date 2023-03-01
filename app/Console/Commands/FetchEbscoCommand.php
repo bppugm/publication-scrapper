@@ -115,7 +115,7 @@ class FetchEbscoCommand extends Command
 
             $authors[$key]['fullname'] = $name;
 
-            if ($searched) {
+            if (optional($searched)->score > 1.3) {
                 $authors[$key]['searched_name'] = $searched->nama;
                 $authors[$key]['nip'] = $searched->nipnika_simaster;
                 $authors[$key]['nidn'] = $searched->nomor_registrasi;

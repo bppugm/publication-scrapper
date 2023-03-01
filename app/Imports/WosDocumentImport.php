@@ -40,10 +40,11 @@ class WosDocumentImport implements WithHeadingRow, OnEachRow, WithProgressBar
                 $search = $query->orderBy('score', ['$meta' => 'textScore'])->get();
                 if ($search->count()) {
                     $search = $search->first();
-                    if ($search->score >= 1) {
+                    if ($search->score >= 1.3) {
                         $row['names'][$key]['nip'] = $search->nipnika_simaster;
                         $row['names'][$key]['nidn'] = $search->nomor_registrasi;
                         $row['names'][$key]['fakultas'] = $search->fakultas;
+                        $row['names'][$key]['score'] = $search->score;
                     }
                 }
 
