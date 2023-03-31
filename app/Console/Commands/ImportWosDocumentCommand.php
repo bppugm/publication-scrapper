@@ -23,7 +23,7 @@ class ImportWosDocumentCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Import WOS from wos.xls';
+    protected $description = 'Import WOS from wos.xlsx';
 
     /**
      * Create a new command instance.
@@ -48,7 +48,7 @@ class ImportWosDocumentCommand extends Command
 
         $import = new WosDocumentImport;
         Document::truncate();
-        $import->withOutput($this->output)->import(base_path('wos.xls'));
+        $import->withOutput($this->output)->import(base_path('wos.xlsx'));
 
         $documents = Document::where('first_nip', null)->get();
         AuthorDocument::truncate();
