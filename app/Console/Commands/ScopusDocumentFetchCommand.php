@@ -67,7 +67,7 @@ class ScopusDocumentFetchCommand extends Command
         $body = [
             'query' => "($yearQuery) AND AF-ID(60069380)",
             // 'query' => "AF-ID(60069380) AND (PUBYEAR < 2017)",
-            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid,authkeywords,affilname',
+            'field' => 'authid,authname,given-name,surname,afid,dc:identifier,dc:title,prism:doi,subtypeDescription,prism:publicationName,source-id,author-url,prism:coverDate,prism:issn,subtype,prism:volume,prism:issueIdentifier,prism:pageRange,eid,authkeywords,affilname,affiliation-country',
             'count' => 100,
             // 'view' => 'complete',
             'start' => 0
@@ -142,6 +142,17 @@ class ScopusDocumentFetchCommand extends Command
                 $selectedAuthor = collect($authors)->filter(function ($item) {
                     return optional($item)['nip'];
                 })->first();
+
+                $affiliations = collect($document['affiliation']);
+
+                $countries = $affiliations->map(function ($item) {
+                    return $item['affiliation-country'];
+                })->unique()->implode(", ");
+
+                $affnames = $affiliations->map(function ($item) {
+                    return $item['affilname'];
+                })->unique()->implode(', ');
+
                 $record = Document::firstOrCreate([
                     'identifier' => $document["dc:identifier"],
                     'eid' => $document['eid'],
@@ -166,6 +177,8 @@ class ScopusDocumentFetchCommand extends Command
                     'selected_index' => optional($selectedAuthor)['index'],
                     'selected_af' => optional($selectedAuthor)['affiliation_name'],
                     'selected_af_count' => optional($selectedAuthor)['affiliation_count'],
+                    'countries' => $countries,
+                    'affiliations' => $affnames,
                 ]);
                 $this->info($record->title." Created [{$record->year}]");
             }
