@@ -29,6 +29,8 @@ RUN useradd -ms /bin/bash scrapper
 RUN usermod -o -u 1000 scrapper
 RUN groupmod -o -g 1000 scrapper
 
+COPY .docker/scrapper.ini "$PHP_INI_DIR/conf.d/"
+
 USER scrapper
 RUN composer install --no-autoloader
 CMD [ "php-fpm" ]
