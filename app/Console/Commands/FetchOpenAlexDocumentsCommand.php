@@ -15,7 +15,7 @@ class FetchOpenAlexDocumentsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'oa_documents:fetch';
+    protected $signature = 'oa_documents:fetch {year?* : Default to this year. Multiple years are allowed. Seperate multiple years using whitespace.}';
 
     /**
      * The console command description.
@@ -45,9 +45,7 @@ class FetchOpenAlexDocumentsCommand extends Command
     {
         Document::truncate();
         $client = new OpenAlexClient;
-
-        $year = now()->year;
-
+        $year = implode("|", $this->argument('year')) ?: now()->year;
         $query = [
             'filter' => "institutions.id:{$this->ugm_id},publication_year:{$year}",
             'per_page' => 100,
