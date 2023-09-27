@@ -28,7 +28,7 @@ class ScopusAuthorImport implements WithHeadingRow, OnEachRow, WithProgressBar
             'name' => $author['name'],
             'faculty' => $author['faculty'],
             'nidn' => optional($author)['nidn'],
-            'nip' => optional($author)['nip'],
+            'nip' => (string)optional($author)['nip'],
             'ma_id' => optional($author)['ma_id'],
         ]);
     }
