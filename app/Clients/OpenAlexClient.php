@@ -10,13 +10,13 @@ class OpenAlexClient
 
     public function __construct() {
         $this->client = new Client([
-            'base_uri' => "http://api.openalex.org/"
+            'base_uri' => "https://api.openalex.org"
         ]);
     }
 
     public function works($query = [])
     {
-        $response = $this->client->get('/works', [
+        $response = $this->client->get('/works?filter=institutions.id:I165230279,publication_year:2023', [
             'query' => $query
         ]);
 
