@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use App\Clients\SintaClient;
-use App\Exports\SintaJournalsExport;
 use Illuminate\Console\Command;
+use App\Exports\SintaJournalsExport;
 
 class FetchSintaJournalsCommand extends Command
 {
