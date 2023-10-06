@@ -112,6 +112,15 @@ class DoajFetchCommand extends Command
                         $document['first_nip'] = collect($document['authors'])->pluck('nip')->filter(function ($value) {
                             return $value;
                         })->first();
+
+                        if ($document['first_nip']) {
+                            $document['author_index'] = collect($document['authors'])->map(function ($item){
+                                return optional($item)['nip'];
+                            })->search($document['first_nip']) + 1;
+                        } else {
+                            $document['author_index'] = null;
+                        }
+                        
                         $document['first_nidn'] = collect($document['authors'])->pluck('nidn')->filter(function ($value) {
                             return $value;
                         })->first();
